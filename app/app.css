@@ -2,9 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --purple: #635FC7;
+  --light-purple: #A8A4FF;
+  --red: #EA5555;
+  --light-red: #FF9898;
+  --lines: #E4EBFA;
+  --lines-dark: #3E3F4E;
+  --medium-gray: #828FA3;
+  --dark-gray: #2B2C37;
+  --light-gray: #F4F7FD;
+  --darkest-gray: #20212C;
+  --white: #fff;
+  --black: #000112;
+}
+
 html,
 body {
-  @apply bg-white dark:bg-gray-950;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  @apply bg-white dark:bg-kgray-darkest;
 
   @media (prefers-color-scheme: dark) {
     color-scheme: dark;
