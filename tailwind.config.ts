@@ -17,6 +17,14 @@ export default {
           '"Noto Color Emoji"',
         ],
       },
+      fontSize: {
+        'heading-xl': ['1.5rem', { lineHeight: '1.875rem', fontWeight: '700' }],
+        'heading-l': ['1.125rem', { lineHeight: '1.4375rem', fontWeight: '700' }],
+        'heading-m': ['0.9375rem', { lineHeight: '1.1875rem', fontWeight: '700' }],
+        'heading-s': ['0.75rem', { lineHeight: '0.9375rem', fontWeight: '700', letterSpacing: '2.4' }],
+        'body-l': ['0.8125rem', { lineHeight: '1.4375', fontWeight: '400' }],
+        'body-m': ['0.75rem', { lineHeight: '0.9375rem', fontWeight: '700' }],
+      },
       colors: {
         primary: {
           DEFAULT: '#635FC7',
