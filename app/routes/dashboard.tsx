@@ -1,5 +1,11 @@
+import { useAtom, useAtomValue, useSetAtom } from "jotai"
+import { useEffect } from "react"
+
+import { boardsAtom, selectedBoardAtom, userAtom } from "~/store"
 import { getLoggedUser } from "~/authentication/user"
+
 import type { Route } from "./+types/dashboard"
+
 
 export async function clientLoader() {
   const user = await getLoggedUser()
@@ -10,7 +16,20 @@ export async function clientLoader() {
 }
 
 export default function Dashboard({ loaderData }: Route.ComponentProps) {
-  const { user } = loaderData ?? {}
+  const { user: userData } = loaderData
+  const [user, setUser] = useAtom(userAtom)
+  const boards = useAtomValue(boardsAtom)
+  const setBoard = useSetAtom(selectedBoardAtom)
 
-  return <div><h2>Welcome {user.name}</h2></div>
+  useEffect(() => {
+    setUser(userData)
+    if (boards.length) {
+      setBoard(boards[0])
+    }
+  }, [userData, boards, setBoard])
+
+  if (!user) return
+
+
+  return <div className="min-h-full"><h2>Welcome {user.name}</h2></div>
 }

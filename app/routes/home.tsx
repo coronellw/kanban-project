@@ -1,6 +1,10 @@
+import { useSetAtom } from "jotai"
 import { Form, redirect } from "react-router"
-import type { Route } from "./+types/home"
 import { login } from "~/authentication/user"
+import Button from "~/ui/button"
+
+import type { Route } from "./+types/home"
+import { userAtom } from "~/store"
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -18,10 +22,10 @@ export async function clientAction({ request }: Route.ActionArgs) {
   if (!email || !password) {
     return { error: 'Unable to login' }
   }
-  const isLoggedIn = await login(email, password)
+  const user = await login(email, password)
 
-  if (isLoggedIn) {
-    console.log('should redirect')
+  if (user) {
+    console.log('User logged in\n', user)
     return redirect("/home")
   }
   return { error: 'Invalid credentials' }
@@ -37,7 +41,13 @@ export default function Home({ actionData }: Route.ComponentProps) {
       <Form method="post" className="flex flex-col">
         <label htmlFor="email">e-mail: <input type="email" name="email" /></label>
         <label htmlFor="password">Password: <input type="password" name="password" /></label>
-        <button type="submit">Submit</button>
+        <span className="flex flex-col gap-4">
+          <Button btnType="primary" type="submit">Log In</Button>
+          <Button btnType="secondary" type="submit">Log In</Button>
+          <Button btnType="destructive" btnSize="small" type="submit">Log In</Button>
+          <hr />
+          <Button btnType="primary" disabled type="submit">Button Primary</Button>
+        </span>
       </Form>
     </div>
   )
