@@ -1,0 +1,32 @@
+.button {
+  @apply text-white font-bold py-2 px-4 rounded-full text-heading-l;
+}
+
+.normal {
+  @apply cursor-pointer;
+}
+
+.small {
+  @apply text-body-l;
+}
+
+.disabled {
+  composes: button;
+  @apply bg-kgray-light text-kgray;
+  @apply cursor-not-allowed;
+}
+
+.primary {
+  composes: button;
+  @apply bg-primary hover:bg-primary-light;
+}
+
+.secondary {
+  composes: button;
+  @apply bg-primary/10 hover:bg-primary/25 text-primary;
+}
+
+.destructive {
+  composes: button;
+  @apply bg-secondary hover:bg-secondary-light;
+}
