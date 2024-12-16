@@ -1,9 +1,9 @@
-interface ISubTask {
+export interface ISubTask {
   name: string
   completed: boolean
 }
 
-interface ITask {
+export interface ITask {
   title: string
   description: string
   subtasks: ISubTask[]
