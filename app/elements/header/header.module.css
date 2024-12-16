@@ -1,0 +1,20 @@
+.header {
+  @apply flex
+}
+
+.logo {
+  @apply w-[300px] h-24 text-transparent border-r border-line bg-[url('../../assets/logo-dark.svg?url')] bg-no-repeat bg-center;
+  @apply dark:bg-[url('../../assets/logo-light.svg?url')] dark:border-line-dark;
+}
+
+.details {
+  @apply flex justify-between items-center flex-1 pl-6 pr-8;
+}
+
+.board-name {
+  @apply text-heading-xl;
+}
+
+.cta {
+  @apply flex items-center gap-8;
+}
