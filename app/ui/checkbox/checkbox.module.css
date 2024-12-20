@@ -1,0 +1,22 @@
+.toggle-btn {
+  @apply bg-primary rounded-[2rem] p-[2px] border-primary-light border border-solid;
+  @apply after:shadow-lg hover:after:will-change-[padding] active:shadow-inner;
+  @apply outline-0 block w-10 h-5 relative cursor-pointer select-none;
+  @apply after:relative after:block after:w-2/5 after:h-full after:left-0 after:transition-all;
+
+  @apply active:after:pr-[.8em];
+  @apply checked:shadow-none checked:bg-primary;
+  @apply after:bg-white after:rounded-full;
+}
+
+:global(.dark) .toggle-btn {
+  @apply border-line-dark;
+}
+
+.toggle {
+  @apply hidden;
+}
+
+.toggle:checked + .toggle-btn:after {
+  @apply left-[60%];
+}
