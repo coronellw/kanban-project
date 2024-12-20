@@ -1,0 +1,23 @@
+.icon {
+  @apply w-5 h-5 bg-kgray;
+}
+
+.light {
+  composes: icon;
+  mask-image: url("../../assets/icon-light-theme.svg");
+  mask-repeat: no-repeat;
+}
+
+.dark {
+  composes: icon;
+  mask-image: url("../../assets/icon-dark-theme.svg");
+  mask-repeat: no-repeat;
+}
+
+.wrapper {
+  @apply flex justify-evenly items-center w-[250px] mx-auto py-4 mb-8 bg-kgray-light rounded-md;
+}
+
+:global(.dark) .wrapper {
+  @apply bg-kgray-darkest;
+}

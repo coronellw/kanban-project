@@ -4,7 +4,10 @@
 
 .logo {
   @apply w-[300px] h-24 text-transparent border-r border-line bg-[url('../../assets/logo-dark.svg?url')] bg-no-repeat bg-center;
-  @apply dark:bg-[url('../../assets/logo-light.svg?url')] dark:border-line-dark;
+}
+
+:global(.dark) .logo{
+  @apply bg-[url('../../assets/logo-light.svg?url')] border-line-dark;
 }
 
 .details {

@@ -1,3 +1,4 @@
+import classNames from "classnames"
 import styles from "./header.module.css"
 import { useAtomValue } from "jotai"
 
@@ -5,10 +6,10 @@ import { selectedBoardAtom } from "~/store"
 import Button from "~/ui/button"
 import DottedMenu from "~/ui/dotted-menu"
 
-const Header = () => {
+const Header = ({className, ...props}:React.ComponentPropsWithoutRef<'header'>) => {
   const board = useAtomValue(selectedBoardAtom)
   return (
-    <header className={styles.header}>
+    <header className={classNames(styles.header, className)} {...props}>
       <h1 className={styles.logo}>
         Kanban
       </h1>

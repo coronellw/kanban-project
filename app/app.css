@@ -20,7 +20,7 @@
 html,
 body {
   font-family: "Plus Jakarta Sans", sans-serif;
-  @apply bg-white dark:bg-kgray-darkest;
+  @apply bg-white dark:bg-kgray-dark text-black dark:text-white;
 
   @media (prefers-color-scheme: dark) {
     color-scheme: dark;
