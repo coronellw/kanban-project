@@ -1,6 +1,6 @@
 export interface IBoard {
   _id: string
   name: string
-  columns: Array<string>
+  columns: Array<{name: string, _id: string, color?:string}>
   owner?: string
 }

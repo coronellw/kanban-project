@@ -3,6 +3,7 @@ import { useEffect } from "react"
 
 import { boardsAtom, selectedBoardAtom, userAtom } from "~/store"
 import { getLoggedUser } from "~/authentication/user"
+import DashboardComponent from "~/components/dashboard"
 
 import type { Route } from "./+types/dashboard"
 
@@ -31,5 +32,5 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
   if (!user) return
 
 
-  return <div className="min-h-full"><h2>Welcome {user.name}</h2></div>
+  return <DashboardComponent />
 }

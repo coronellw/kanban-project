@@ -1,0 +1,8 @@
+.wrapper {
+  @apply flex gap-4 items-center text-kgray;
+}
+.icon-eye-closed {
+  @apply w-4 h-4 bg-kgray;
+  mask-image: url('../../assets/icon-hide-sidebar.svg');
+  mask-repeat: no-repeat;
+}

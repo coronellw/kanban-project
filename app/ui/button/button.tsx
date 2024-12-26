@@ -7,19 +7,20 @@ type Button = {
   btnType?: "primary" | "secondary" | "destructive"
 } & React.ComponentPropsWithoutRef<'button'>
 
-const Button = ({ children, disabled, btnType = "primary", btnSize = "large", ...props }: Button) => {
+const Button = ({ children, disabled, className, btnType = "primary", btnSize = "large", ...props }: Button) => {
 
   return (
     <button
       className={classNames(
+        className,
         {
-          [styles.primary]: !disabled && btnType === "primary",
+          [styles.primary]: btnType === "primary",
           [styles.secondary]: !disabled && btnType === "secondary",
           [styles.destructive]: !disabled && btnType === "destructive",
           [styles.normal]: !disabled && btnSize === "large",
           [styles.small]: !disabled && btnSize === "small",
-          [styles.disabled]: disabled,
-        }
+          // [styles.disabled]: disabled,
+        },
       )}
       disabled={disabled}
       {...props}

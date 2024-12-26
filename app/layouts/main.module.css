@@ -1,0 +1,12 @@
+.wrapper {
+  @apply min-h-screen grid grid-cols-1 grid-rows-[64px_1fr];
+  @apply sm:grid-cols-[300px_1fr] sm:grid-rows-[96px_1fr];
+}
+
+.main {
+  @apply bg-line text-kgray-darkest flex justify-center items-center h-full w-full;
+}
+
+:global(.dark) .main {
+  @apply bg-kgray-darkest text-kgray;
+}

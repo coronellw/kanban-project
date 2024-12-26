@@ -15,7 +15,7 @@
 }
 
 .wrapper {
-  @apply flex justify-evenly items-center w-[250px] mx-auto py-4 mb-8 bg-kgray-light rounded-md;
+  @apply flex justify-evenly items-center w-[250px] py-4 bg-kgray-light rounded-md;
 }
 
 :global(.dark) .wrapper {

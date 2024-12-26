@@ -1,13 +1,15 @@
 .header {
-  @apply flex
+  @apply flex col-span-full justify-center items-center px-4 py-5;
+  @apply sm:px-0 sm:py-0;
 }
 
 .logo {
-  @apply w-[300px] h-24 text-transparent border-r border-line bg-[url('../../assets/logo-dark.svg?url')] bg-no-repeat bg-center;
+  @apply sm:w-[300px] sm:h-24 w-6 h-6 text-transparent text-[0px] border-r border-line;
+  @apply bg-[url('../../assets/logo-mobile.svg?url')] sm:bg-[url('../../assets/logo-dark.svg?url')] bg-no-repeat bg-center;
 }
 
 :global(.dark) .logo{
-  @apply bg-[url('../../assets/logo-light.svg?url')] border-line-dark;
+  @apply sm:bg-[url('../../assets/logo-light.svg?url')] border-line-dark;
 }
 
 .details {
@@ -16,6 +18,14 @@
 
 .board-name {
   @apply text-heading-xl;
+}
+
+.btn-normal {
+  @apply hidden md:flex;
+}
+
+.btn-mobile {
+  @apply flex md:hidden;
 }
 
 .cta {

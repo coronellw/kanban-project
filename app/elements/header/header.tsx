@@ -1,13 +1,16 @@
 import classNames from "classnames"
 import styles from "./header.module.css"
-import { useAtomValue } from "jotai"
+import { useAtomValue, useSetAtom } from "jotai"
 
-import { selectedBoardAtom } from "~/store"
+import { activeModalAtom, selectedBoardAtom } from "~/store"
 import Button from "~/ui/button"
 import DottedMenu from "~/ui/dotted-menu"
+import { ModalWindows } from "~/types"
 
-const Header = ({className, ...props}:React.ComponentPropsWithoutRef<'header'>) => {
+const Header = ({ className, ...props }: React.ComponentPropsWithoutRef<'header'>) => {
   const board = useAtomValue(selectedBoardAtom)
+  const setOpenModal = useSetAtom(activeModalAtom)
+
   return (
     <header className={classNames(styles.header, className)} {...props}>
       <h1 className={styles.logo}>
@@ -18,8 +21,13 @@ const Header = ({className, ...props}:React.ComponentPropsWithoutRef<'header'>) 
           {board && board.name}
         </span>
         <span className={styles.cta}>
-          <Button btnSize="large" btnType="primary" disabled={!board || !board.columns}>+ Add New Task</Button>
-          <DottedMenu />
+          <Button className={styles["btn-normal"]} btnSize="large" btnType="primary" disabled={!board || !board.columns?.length}>
+            + Add New Task
+          </Button>
+          <Button className={styles["btn-mobile"]} btnSize="large" btnType="primary" disabled={!board || !board.columns?.length}>
+            +
+          </Button>
+          <DottedMenu onClick={() => setOpenModal(ModalWindows.Sidebar)} />
         </span>
       </div>
     </header>

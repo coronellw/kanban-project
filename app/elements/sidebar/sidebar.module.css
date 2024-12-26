@@ -1,0 +1,41 @@
+.sidebar {
+  @apply hidden justify-between pt-4 pr-6 rounded-lg bg-white;
+  /* @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2; */
+  @apply sm:min-w-[300px] sm:flex sm:flex-col sm:relative;
+  @apply sm:top-auto sm:left-auto sm:translate-x-0 sm:translate-y-0;
+}
+
+:global(.dark) .sidebar {
+  @apply bg-kgray-dark;
+}
+
+.nav {
+  @apply flex flex-col text-kgray;
+}
+
+.title {
+  @apply text-heading-s uppercase ml-8 mb-5 tracking-[2.4px];
+}
+
+.board {
+  @apply flex items-center gap-4 py-4 px-8 cursor-pointer;
+}
+
+.board-selected {
+  @apply bg-primary text-white rounded-r-full;
+}
+
+.board-selected .icon {
+  @apply bg-white;
+}
+
+.icon {
+  @apply w-4 h-4 bg-kgray;
+  mask-image: url('../../assets/icon-board.svg');
+  mask-repeat: no-repeat;
+}
+
+.options {
+  @apply flex-col gap-4 mb-8 pl-6 hidden;
+  @apply sm:flex;
+}

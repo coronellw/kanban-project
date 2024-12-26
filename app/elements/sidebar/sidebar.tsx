@@ -1,24 +1,42 @@
-import { useAtomValue } from "jotai"
+import { useAtomValue, useAtom } from "jotai"
 import boardIcon from "~/assets/icon-board.svg"
-import { boardsAtom } from "~/store"
+import { boardsAtom, selectedBoardAtom } from "~/store"
 
-const Sidebar = () => {
+import styles from "./sidebar.module.css"
+import classNames from "classnames"
+import type { IBoard } from "~/types"
+import ThemeSwitcher from "~/components/theme-switcher"
+import VisibilityToggle from "~/components/visibility-toggle"
+
+const Sidebar = ({ className, ...props }: React.ComponentPropsWithoutRef<'aside'>) => {
   const boards = useAtomValue(boardsAtom)
+  const [currentBoard, setCurrentBoard] = useAtom(selectedBoardAtom)
+
+  const handleBoardSelection = (board: IBoard) => {
+    setCurrentBoard(board)
+  }
+
   return (
-    <aside className="min-h-screen min-w-[300px]">
-      <nav>
-        <h3>All Boards ({boards.length})</h3>
+    <aside className={classNames(styles.sidebar, className)} {...props}>
+      <nav className={styles.nav}>
+        <h3 className={styles.title}>All Boards ({boards.length})</h3>
         <ul>
           {boards.map(b =>
-            <li key={b._id} className="flex items-center gap-4">
-              <img src={boardIcon} alt="Board Icon" />
+            <li
+              key={b._id}
+              className={classNames(styles.board, {
+                [styles['board-selected']]: b._id === currentBoard?._id
+              })}
+              onClick={() => handleBoardSelection(b)}
+            >
+              <span className={styles.icon}></span>
               <span>
                 {b.name}
               </span>
             </li>
           )}
-          <li className="flex items-center gap-4 text-primary">
-            <img src={boardIcon} alt="Board Icon" />
+          <li className={classNames(styles.board, "text-primary")}>
+            <span className={styles.icon}></span>
             <span>
               + Create New Board
             </span>
@@ -26,6 +44,10 @@ const Sidebar = () => {
         </ul>
       </nav>
 
+      <span className={styles.options}>
+        <ThemeSwitcher />
+        <VisibilityToggle />
+      </span>
     </aside>
   )
 }

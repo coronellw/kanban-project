@@ -1,7 +1,8 @@
 import styles from "./dotted-menu.module.css"
 
-const DottedMenu = () => {
-  return <span className={styles.dots}></span>
+
+const DottedMenu = (props: React.ComponentPropsWithoutRef<'span'>) => {
+  return <span className={styles.dots} {...props}></span>
 }
 
 export default DottedMenu
