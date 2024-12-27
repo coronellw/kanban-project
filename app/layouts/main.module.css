@@ -10,3 +10,7 @@
 :global(.dark) .main {
   @apply bg-kgray-darkest text-kgray;
 }
+
+:global(.sidebarClosed) .main {
+  @apply col-span-full;
+}

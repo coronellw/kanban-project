@@ -1,10 +1,11 @@
-import { useAtomValue } from "jotai"
-import { selectedBoardAtom } from "~/store"
+import { useAtom, useAtomValue } from "jotai"
+import { isSidebarVisibleAtom, selectedBoardAtom } from "~/store"
 import EmptyBoard from "./empty-board"
 
 
 const Dashboard = () => {
   const board = useAtomValue(selectedBoardAtom)
+  const [isSidebarVisible, setIsSidebarVisible] = useAtom(isSidebarVisibleAtom)
 
   if (!board?.columns.length) {
     return <EmptyBoard />
@@ -25,7 +26,7 @@ const Dashboard = () => {
           ))}
         </ul>
       )}
-
+      {!isSidebarVisible && <div className="absolute left-0 bottom-8 text-white bg-primary pl-8 pr-4 py-2 rounded-r-full" onClick={() => setIsSidebarVisible(true)}>Open</div>}
     </div>
   )
 }

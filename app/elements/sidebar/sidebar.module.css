@@ -9,6 +9,10 @@
   @apply bg-kgray-dark;
 }
 
+:global(.sidebarClosed) .sidebar {
+  @apply sm:hidden bg-red-600;
+}
+
 .nav {
   @apply flex flex-col text-kgray;
 }
