@@ -2,8 +2,7 @@ import { useEffect, useRef } from "react"
 import { useAtom } from "jotai"
 import styles from "./backdrop.module.css"
 import { activeModalAtom } from "~/store"
-import Button from "~/ui/button"
-import Sidebar from "~/elements/sidebar"
+import { SidebarModal } from "~/components/modals"
 import { ModalWindows } from "~/types"
 
 const Backdrop = () => {
@@ -12,9 +11,8 @@ const Backdrop = () => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      console.log({target: event.target})
       if (backdropRef.current && backdropRef.current.isEqualNode(event.target as Node)) {
-        setActiveModal(false)
+        setActiveModal('')
       }
     }
 
@@ -33,13 +31,8 @@ const Backdrop = () => {
     return null
   }
 
-  const handleBackdropClose = () => {
-    setActiveModal('')
-  }
-
   return <div className={styles.backdrop} aria-labelledby="modal-title" role="dialog" aria-modal="true" ref={backdropRef}>
-    {ModalWindows.Sidebar === activeModal && <Sidebar className="!flex" onClick={() => setActiveModal(false)} />}
-    <Button btnType="destructive" onClick={handleBackdropClose}>Close</Button>
+    {ModalWindows.Sidebar === activeModal && <SidebarModal />}
   </div>
 }
 

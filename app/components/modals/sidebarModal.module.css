@@ -1,0 +1,7 @@
+.wrapper {
+  @apply !flex flex-col gap-4 py-2 items-center justify-center bg-white rounded-lg;
+}
+
+:global(.dark) .wrapper {
+  @apply bg-kgray-dark;
+}
