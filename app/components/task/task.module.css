@@ -1,0 +1,15 @@
+.task {
+  @apply flex flex-col gap-4 rounded-lg bg-white shadow-lg px-4 py-6;
+}
+
+:global(.dark) .task {
+  @apply bg-kgray-dark;
+}
+
+.title {
+  @apply text-heading-m;
+}
+
+:global(.dark) .title {
+  @apply text-white;
+}

@@ -1,5 +1,9 @@
-.empty {
-  @apply flex flex-col gap-8 justify-center text-kgray;
+.dashboard {
+  @apply min-h-full pl-3 py-3 sm:p-6 ml-0;
+}
+
+.dashboard:has(:global(.emptyBoard)) {
+  @apply flex flex-col items-center justify-center;
 }
 
 .viewWidget {

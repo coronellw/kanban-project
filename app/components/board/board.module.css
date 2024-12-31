@@ -1,0 +1,7 @@
+.board {
+  @apply grid grid-flow-col auto-cols-[17.5rem] gap-6 overflow-x-auto;
+}
+
+:global(.emptyBoard) {
+  @apply flex flex-col gap-8 justify-center text-kgray;
+}

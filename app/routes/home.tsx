@@ -25,17 +25,12 @@ export async function clientAction({ request }: Route.ActionArgs) {
   const user = await login(email, password)
 
   if (user) {
-    console.log('User logged in\n', user)
     return redirect("/home")
   }
   return { error: 'Invalid credentials' }
 }
 
-export default function Home({ actionData }: Route.ComponentProps) {
-
-  if (actionData) {
-    console.log({ error: actionData })
-  }
+export default function Home() {
   return (
     <div className="w-full min-h-screen flex justify-center items-center">
       <Form method="post" className="flex flex-col">
@@ -43,10 +38,6 @@ export default function Home({ actionData }: Route.ComponentProps) {
         <label htmlFor="password">Password: <input type="password" name="password" /></label>
         <span className="flex flex-col gap-4">
           <Button btnType="primary" type="submit">Log In</Button>
-          <Button btnType="secondary" type="submit">Log In</Button>
-          <Button btnType="destructive" btnSize="small" type="submit">Log In</Button>
-          <hr />
-          <Button btnType="primary" disabled type="submit">Button Primary</Button>
         </span>
       </Form>
     </div>

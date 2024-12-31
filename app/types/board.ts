@@ -1,3 +1,5 @@
+import type { ITask } from "./task"
+
 export interface IBoard {
   _id: string
   name: string
@@ -9,4 +11,5 @@ export interface IColumn {
   name: string
   _id: string
   color?:string
+  tasks: Array<ITask>
 }
