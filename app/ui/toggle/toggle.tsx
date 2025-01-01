@@ -1,13 +1,13 @@
 import classNames from "classnames"
 import { v4 } from "uuid"
-import styles from "./checkbox.module.css"
-import React, { useState, type SyntheticEvent } from "react"
+import styles from "./toggle.module.css"
+import React, { useState } from "react"
 
-type checkboxProps = {
+type toggleProps = {
   handleChange: (themeState: React.ChangeEvent<HTMLInputElement>) => void
 } & React.ComponentPropsWithoutRef<'input'>
 
-const Checkbox = ({ handleChange, checked = false }: checkboxProps) => {
+const Toggle = ({ handleChange, checked = false }: toggleProps) => {
   const [id] = useState(v4())
 
   return (
@@ -24,4 +24,4 @@ const Checkbox = ({ handleChange, checked = false }: checkboxProps) => {
   )
 }
 
-export default Checkbox
+export default Toggle

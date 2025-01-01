@@ -52,6 +52,6 @@
 }
 
 .options {
-  @apply flex-col gap-4 mb-8 pl-6 hidden;
+  @apply flex-col gap-4 mb-8 hidden;
   @apply sm:flex;
 }

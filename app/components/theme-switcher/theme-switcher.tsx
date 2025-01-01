@@ -1,4 +1,4 @@
-import Checkbox from "~/ui/checkbox"
+import Checkbox from "~/ui/toggle"
 import styles from "./theme-switcher.module.css"
 import { useAtom } from "jotai"
 import { themeAtom } from "~/store"
