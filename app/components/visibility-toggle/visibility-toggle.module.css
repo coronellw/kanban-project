@@ -1,6 +1,15 @@
-.wrapper {
-  @apply flex gap-4 items-center text-kgray;
+.visibility {
+  @apply flex gap-4 pl-8 py-4 text-kgray;
 }
+
+.visibility:hover {
+ @apply bg-line text-primary rounded-r-full;
+}
+
+:global(.dark) .visibility:hover {
+  @apply bg-white;
+}
+
 .icon-eye-closed {
   @apply w-4 h-4 bg-kgray;
   mask-image: url('../../assets/icon-hide-sidebar.svg');

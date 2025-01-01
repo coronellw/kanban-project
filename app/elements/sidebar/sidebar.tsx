@@ -45,7 +45,7 @@ const Sidebar = ({ className, ...props }: React.ComponentPropsWithoutRef<'aside'
       </nav>
 
       <span className={styles.options}>
-        <ThemeSwitcher />
+        <ThemeSwitcher className="self-center" />
         <VisibilityToggle />
       </span>
     </aside>

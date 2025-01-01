@@ -25,6 +25,18 @@
   @apply flex items-center gap-4 py-4 px-8 cursor-pointer;
 }
 
+.board:hover {
+  @apply bg-line text-primary rounded-r-full;
+}
+
+:global(.dark) .board:hover {
+  @apply bg-white;
+}
+
+.board:hover .icon {
+  @apply bg-primary;
+}
+
 .board-selected {
   @apply bg-primary text-white rounded-r-full;
 }

@@ -10,6 +10,10 @@
   @apply text-heading-m;
 }
 
+.task:hover .title {
+  @apply text-primary;
+}
+
 :global(.dark) .title {
   @apply text-white;
 }

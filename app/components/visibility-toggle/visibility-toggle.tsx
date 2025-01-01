@@ -12,7 +12,7 @@ const Visibility = () => {
   }
 
   return (
-    <div className={styles.wrapper} onClick={handleVisibilityChange}>
+    <div className={styles.visibility} onClick={handleVisibilityChange}>
       <span className={styles["icon-eye-closed"]}></span>
       Hide Sidebar
     </div>
