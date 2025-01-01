@@ -1,13 +1,15 @@
 import { DndContext, type DragEndEvent } from "@dnd-kit/core"
 import { useAtom } from "jotai"
 import { selectedBoardAtom } from "~/store"
+import { kanbanApi } from "~/api"
+
 import EmptyBoard from "./empty-board"
 
-import styles from "./board.module.css"
-import { kanbanApi } from "~/api"
+import Column from "~/components/column"
+import AddNewColumn from "~/components/column/add-column"
+
 import type { ITask } from "~/types"
-import Column from "../column"
-import AddNewColumn from "../column/add-column"
+import styles from "./board.module.css"
 
 const Board = () => {
   const [board, setBoard] = useAtom(selectedBoardAtom)
