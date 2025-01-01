@@ -15,11 +15,10 @@ const Button = ({ children, disabled, className, btnType = "primary", btnSize = 
         className,
         {
           [styles.primary]: btnType === "primary",
-          [styles.secondary]: !disabled && btnType === "secondary",
-          [styles.destructive]: !disabled && btnType === "destructive",
-          [styles.normal]: !disabled && btnSize === "large",
-          [styles.small]: !disabled && btnSize === "small",
-          // [styles.disabled]: disabled,
+          [styles.secondary]: btnType === "secondary",
+          [styles.destructive]: btnType === "destructive",
+          [styles.normal]: btnSize === "large",
+          [styles.small]: btnSize === "small",
         },
       )}
       disabled={disabled}
