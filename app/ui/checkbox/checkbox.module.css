@@ -1,0 +1,43 @@
+button {
+  all: unset;
+}
+
+.checkboxRoot {
+  @apply flex items-center justify-center shadow-lg bg-white w-4 h-4 rounded border-kgray/25;
+}
+
+.checkboxRoot[data-state=checked],
+:global(.dark) .checkboxRoot[data-state=checked]{
+  @apply bg-primary;
+}
+
+:global(.dark) .checkboxRoot {
+  @apply bg-kgray-darkest;
+}
+
+.checkbox {
+  @apply flex gap-4 items-center p-3 rounded bg-kgray-light hover:bg-primary/25 cursor-pointer;
+}
+
+:global(.dark) .checkbox {
+  @apply bg-kgray-dark hover:bg-primary/25;
+}
+
+.label {
+  @apply text-body-m text-black;
+}
+
+:global(.dark) .label {
+  @apply text-white;
+}
+
+button[data-state=checked]+.label,
+button[data-state=checked]+ :global(.dark) .label {
+  @apply line-through text-kgray;
+}
+
+.indicator {
+  @apply flex items-center justify-center w-[10px] h-2 bg-white;
+  mask-image: url("../../assets/icon-check.svg");
+  mask-repeat: no-repeat;
+}
