@@ -1,0 +1,46 @@
+.trigger {
+  @apply flex justify-between gap-4;
+  @apply px-4 py-2 bg-white text-body-m text-black rounded border border-kgray/25;
+  @apply focus:outline-primary focus:outline-1 focus:outline;
+}
+
+:global(.dark) .trigger {
+  @apply bg-kgray-darkest text-white;
+}
+
+.content {
+  @apply p-4 bg-white rounded text-body-l;
+}
+
+:global(.dark) .content {
+  @apply bg-kgray-darkest;
+}
+
+.baseItem {
+  @apply flex justify-between p-2 w-[calc(var(--radix-select-trigger-width)-32px)] cursor-pointer;
+}
+
+.item {
+  composes: baseItem;
+  @apply bg-white;
+
+  &[data-state=checked] {
+    @apply bg-line/50;
+  }
+
+  &:hover {
+    @apply bg-line;
+  }
+}
+
+:global(.dark) .item {
+  @apply bg-kgray-darkest;
+
+  &[data-state=checked] {
+    @apply bg-kgray-dark/50;
+  }
+
+  &:hover {
+    @apply bg-kgray-dark;
+  }
+}
