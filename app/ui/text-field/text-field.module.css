@@ -1,0 +1,28 @@
+.textField {
+  @apply px-4 py-2 bg-white text-body-m text-black rounded border border-kgray/25 w-full;
+  @apply focus:outline-primary focus:outline-1 focus:outline;
+}
+
+:global(.dark) .textField {
+  @apply bg-line-dark text-white;
+}
+
+.wrapper:has(.errorMessage) .textField {
+  @apply invalid:outline-secondary invalid:outline-1 invalid:outline;
+}
+
+.textField::placeholder {
+  @apply font-normal;
+}
+
+.wrapper {
+  @apply relative;
+}
+
+.errorMessage {
+  @apply absolute text-secondary p-1 rounded bg-white top-1/2 right-4 -translate-y-1/2 text-body-l min-w-max;
+}
+
+:global(.dark) .errorMessage {
+  @apply bg-line-dark;
+}
