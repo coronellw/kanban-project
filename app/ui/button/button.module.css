@@ -1,5 +1,5 @@
 .button {
-  @apply flex items-center justify-center text-white font-bold py-2 px-4 rounded-full text-heading-l;
+  @apply items-center justify-center text-white font-bold py-2 px-4 rounded-full text-heading-l;
 }
 
 .normal {
@@ -26,6 +26,10 @@ button[disabled] {
 .secondary {
   composes: button;
   @apply bg-primary/10 hover:bg-primary/25 text-primary;
+}
+
+:global(.dark) .secondary {
+  @apply bg-white;
 }
 
 .secondary[disabled] {

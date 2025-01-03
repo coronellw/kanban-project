@@ -9,7 +9,7 @@
 }
 
 .content {
-  @apply p-4 bg-white rounded text-body-l;
+  @apply p-4 bg-white rounded text-body-l z-30;
 }
 
 :global(.dark) .content {

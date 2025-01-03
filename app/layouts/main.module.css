@@ -1,6 +1,6 @@
 .wrapper {
   @apply min-h-screen grid grid-cols-1 grid-rows-[64px_1fr];
-  @apply sm:grid-cols-[300px_1fr] sm:grid-rows-[96px_1fr];
+  @apply sm:grid-cols-[300px_minmax(calc(100dvw-320px),1fr)] sm:grid-rows-[96px_1fr];
 }
 
 .main {

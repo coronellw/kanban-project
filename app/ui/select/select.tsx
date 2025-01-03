@@ -10,7 +10,7 @@ import classNames from "classnames"
 
 type SelectProps = {
   placeholder?: string
-  handleOptionChange: (value: string) => void
+  handleOptionChange?: (value: string) => void
   options?: Array<{ value: string, label: string }>
 } & React.ComponentPropsWithoutRef<'select'>
 
