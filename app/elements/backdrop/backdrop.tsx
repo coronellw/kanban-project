@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react"
 import { useAtom } from "jotai"
 import styles from "./backdrop.module.css"
 import { activeModalAtom } from "~/store"
-import { SidebarModal } from "~/components/modals"
+import { SidebarModal, AddNewTaskModal } from "~/components/modals"
 import { ModalWindows } from "~/types"
 
 const Backdrop = () => {
@@ -12,7 +12,7 @@ const Backdrop = () => {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (backdropRef.current && backdropRef.current.isEqualNode(event.target as Node)) {
-        setActiveModal('')
+        setActiveModal(0)
       }
     }
 
@@ -33,6 +33,7 @@ const Backdrop = () => {
 
   return <div className={styles.backdrop} aria-labelledby="modal-title" role="dialog" aria-modal="true" ref={backdropRef}>
     {ModalWindows.Sidebar === activeModal && <SidebarModal />}
+    {ModalWindows.AddNewTask === activeModal && <AddNewTaskModal />}
   </div>
 }
 

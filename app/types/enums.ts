@@ -1,3 +1,5 @@
 export enum ModalWindows {
-  Sidebar = 1
+  None,
+  Sidebar,
+  AddNewTask,
 }

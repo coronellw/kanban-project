@@ -8,7 +8,7 @@ import styles from "./sidebarModal.module.css"
 export const SidebarModal = () => {
   const setActiveModal = useSetAtom(activeModalAtom)
   return <div className={styles.wrapper}>
-    <Sidebar className="!flex" onClick={() => setActiveModal('')} />
+    <Sidebar className="!flex" onClick={() => setActiveModal(0)} />
     <ThemeSwitcher />
   </div>
 }
