@@ -1,15 +1,13 @@
-import { useSetAtom } from "jotai"
-import { Form, redirect } from "react-router"
+import { redirect } from "react-router"
 import { login } from "~/authentication/user"
-import Button from "~/ui/button"
+import Login from "~/elements/login"
 
 import type { Route } from "./+types/home"
-import { userAtom } from "~/store"
 
 export function meta({ }: Route.MetaArgs) {
   return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
+    { title: "Kanban Client" },
+    { name: "description", content: "Kanban Client by Wiston Coronell!" },
   ]
 }
 
@@ -32,14 +30,6 @@ export async function clientAction({ request }: Route.ActionArgs) {
 
 export default function Home() {
   return (
-    <div className="w-full min-h-screen flex justify-center items-center">
-      <Form method="post" className="flex flex-col">
-        <label htmlFor="email">e-mail: <input type="email" name="email" /></label>
-        <label htmlFor="password">Password: <input type="password" name="password" /></label>
-        <span className="flex flex-col gap-4">
-          <Button btnType="primary" type="submit">Log In</Button>
-        </span>
-      </Form>
-    </div>
+    <Login />
   )
 }

@@ -1,0 +1,32 @@
+.login {
+  @apply w-full min-h-screen flex justify-center items-center relative;
+}
+
+.innerLogin {
+  @apply bg-kgray-light flex flex-col p-8 items-center rounded;
+}
+
+:global(.dark) .innerLogin {
+  @apply bg-kgray-darkest;
+}
+
+.logo {
+  @apply block w-80 h-16;
+  @apply bg-[url('../../assets/logo-mobile.svg?url')] sm:bg-[url('../../assets/logo-dark.svg?url')] bg-no-repeat bg-center;
+}
+
+:global(.dark) .logo{
+  @apply sm:bg-[url('../../assets/logo-light.svg?url')];
+}
+
+.form {
+  @apply flex flex-col gap-4 p-8;
+}
+
+.cta {
+  @apply flex flex-col gap-4;
+}
+
+.themeSwitcher {
+  @apply fixed bottom-4 right-4;
+}
