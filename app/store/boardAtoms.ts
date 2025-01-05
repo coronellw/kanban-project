@@ -13,4 +13,4 @@ export const boardsAtom = atom<Promise<IBoard[]>>(async (get) => {
   return boardsResponse.data
 })
 
-export const selectedBoardAtom = atom<IBoard | null>(null)
+export const selectedBoardAtom = atom<IBoard & {version?: number}>()

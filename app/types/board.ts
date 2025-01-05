@@ -5,6 +5,7 @@ export interface IBoard {
   name: string
   columns: Array<IColumn>
   owner?: string
+  version?: number
 }
 
 export interface IColumn {

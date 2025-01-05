@@ -2,18 +2,21 @@ import { useAtom } from "jotai"
 
 import { selectedBoardAtom } from "~/store"
 
-import type { IBoard } from "~/types"
+import type { IBoard, ITask } from "~/types"
 
 type ID = number | string
 
 export const useBoard = (board?: IBoard) => {
   const [selectedBoard, setSelectedBoard] = useAtom(selectedBoardAtom)
 
-  const currentBoard = board || selectedBoard
+  let currentBoard = board || selectedBoard
 
   if (!currentBoard) {
-    return new Error("No board found, provide one or set the board atom")
+    // throw new Error("No board found, provide one or set the board atom")
+    currentBoard = { _id: '', name: '', columns: [], version: 0 }
   }
+
+  const saveBoard = () => setSelectedBoard({ ...currentBoard, version: currentBoard.version ? currentBoard.version + 1 : 0 })
 
   const findColumnIndex = (columnId: ID) => currentBoard.columns.findIndex(c => c._id === columnId)
 
@@ -45,17 +48,40 @@ export const useBoard = (board?: IBoard) => {
     return column.tasks[taskIndex]
   }
 
+  const updateTask = (task: ITask) => {
+    const { column } = findTaskIndex(task._id)
+    const originColumnIndex = findColumnIndex(column._id)
+
+    if (task.status !== column._id) {
+      const destinationColumnIndex = findColumnIndex(task.status as string)
+      currentBoard.columns[originColumnIndex].tasks = currentBoard.columns[originColumnIndex].tasks.filter(t => t._id !== task._id)
+      currentBoard.columns[destinationColumnIndex].tasks = [...currentBoard.columns[destinationColumnIndex].tasks, task]
+    } else {
+      currentBoard.columns[originColumnIndex].tasks = currentBoard.columns[originColumnIndex].tasks.map(t => t._id !== task._id ? t : task)
+    }
+    saveBoard()
+  }
+
   const moveTask = (taskId: ID, destinationColumn: ID) => {
     const { column, taskIndex } = findTaskIndex(taskId)
     const originColumnIndex = findColumnIndex(column._id)
     const destinationColumnIndex = findColumnIndex(destinationColumn)
 
     const task = currentBoard.columns[originColumnIndex].tasks[taskIndex]
+    if (task.status === destinationColumn) return
+
+    task.status = destinationColumn as string
 
     currentBoard.columns[originColumnIndex].tasks = currentBoard.columns[originColumnIndex].tasks.filter(t => t._id !== taskId)
     currentBoard.columns[destinationColumnIndex].tasks = [...currentBoard.columns[destinationColumnIndex].tasks, task]
 
-    setSelectedBoard(currentBoard)
+    saveBoard()
+  }
+
+  const addTask = (task: ITask) => {
+    const columnIndex = findColumnIndex(task._id)
+    currentBoard.columns[columnIndex].tasks = [...currentBoard.columns[columnIndex].tasks, task]
+    saveBoard()
   }
 
 
@@ -66,6 +92,8 @@ export const useBoard = (board?: IBoard) => {
     getColumnFromTaskId,
     findTask,
     findTaskIndex,
+    updateTask,
     moveTask,
+    addTask
   }
 }

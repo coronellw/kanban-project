@@ -1,54 +1,90 @@
 import { useMemo, useRef, useState } from "react"
-import { useAtomValue, useSetAtom } from "jotai"
+import { useAtom, useAtomValue, useSetAtom } from "jotai"
+import type { AxiosResponse } from "axios"
+import { v4 } from "uuid"
 
 import TextField from "~/ui/text-field"
 import TextArea from "~/ui/text-area"
 import Button from "~/ui/button"
 import Select from "~/ui/select"
 
-import { activeModalAtom, selectedBoardAtom } from "~/store"
+import { activeModalAtom, ColumnsAtom, selectedTaskAtom } from "~/store"
 import { capitalize } from "~/utils/capitalize"
+import { kanbanApi } from "~/api"
+
+import { useBoard } from "~/hooks/useBoard"
+
+import type { ISubTask, ITask } from "~/types"
 
 import styles from "./add-new-task-modal.module.css"
-import { v4 } from "uuid"
-import { kanbanApi } from "~/api"
 
 export const AddNewTaskModal = () => {
   const formRef = useRef<HTMLFormElement>(null)
-  const board = useAtomValue(selectedBoardAtom)
+  const columns = useAtomValue(ColumnsAtom)
   const setActiveModal = useSetAtom(activeModalAtom)
-  const states = useMemo(() => board?.columns.map(column => ({ value: column._id, label: capitalize(column.name) })), [board?.columns]) || []
+  const [selectedTask, setSelectedTask] = useAtom(selectedTaskAtom)
+  const states = useMemo(() =>columns?.map(column => ({ value: column._id, label: capitalize(column.name) })), [columns]) || []
+  const existingSubtasks = useMemo(() => selectedTask?.subtasks.map(s => `${s._id}`), [selectedTask?.subtasks]) || []
 
-  const [selectedStatus, setSelectedStatus] = useState<string | undefined>(states.length > 0 ? states[0].value : undefined)
-  const [subtasks, setSubtasks] = useState<string[]>([])
+  const [selectedStatus, setSelectedStatus] = useState<string | undefined>(selectedTask?.status || states[0]?.value)
+  const [subtasks, setSubtasks] = useState<string[]>(existingSubtasks)
+  const [isNew] = useState<boolean>(!selectedTask?._id)
+  const [hasChanges, setHasChanges] = useState<boolean>(isNew)
 
-  const handleValueChange = (value: string) => setSelectedStatus(value)
+  const { addTask, updateTask } = useBoard()
+
+  const handleStatusChange = (value: string) => setSelectedStatus(value)
+
+  const handleFormChange = () => {
+    if (isNew || !selectedTask || !formRef.current) return
+
+    setHasChanges(isNew || hasUpdates(selectedTask, formRef.current))
+  }
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    if (!formRef.current) {
-      return
-    }
+    if (!formRef.current) return
+
     const formData = new FormData(formRef.current)
-    const subt = subtasks.map(subtask => ({name: formData.get(subtask)}))
+    const subt = subtasks.map(subtask => {
+      const originalTask: ISubTask = selectedTask?.subtasks.find(st => st._id === subtask) || {} as ISubTask
+      return { ...originalTask, name: formData.get(subtask) }
+    })
     const title = formData.get('title')
     const description = formData.get('description')
+
     try {
-      const response = await kanbanApi.post("/tasks", { title, description, subtasks: subt, status: selectedStatus })
-      console.log(response.data)
+      let response: AxiosResponse<ITask>
+      if (!!selectedTask?._id) {
+        response = await kanbanApi.patch(`/tasks/${selectedTask._id}`, { title, description, subtasks: subt, status: selectedStatus })
+      } else {
+        response = await kanbanApi.post("/tasks", { title, description, subtasks: subt, status: selectedStatus })
+      }
+
+      if (response.status === 202) {
+        updateTask(response.data)
+      } else {
+        addTask(response.data)
+      }
+      setSelectedTask(undefined)
       setActiveModal(0)
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
   }
 
   return (
-    <form ref={formRef} className={styles.newTaskModal} onSubmit={handleSubmit}>
-      <span className="text-heading-l">Add New Task</span>
+    <form
+      ref={formRef}
+      onSubmit={handleSubmit}
+      onChange={handleFormChange}
+      className={styles.newTaskModal}
+    >
+      <span className="text-heading-l">{isNew ? "Add New" : "Edit"} Task</span>
 
       <div>
         <label htmlFor="title">Title</label>
-        <TextField id="title" name="title" required />
+        <TextField id="title" name="title" required defaultValue={selectedTask?.title} />
       </div>
 
       <div>
@@ -56,6 +92,7 @@ export const AddNewTaskModal = () => {
         <TextArea
           name="description"
           id="description"
+          defaultValue={selectedTask?.description}
           className="min-h-12 max-h-28"
         />
       </div>
@@ -68,8 +105,9 @@ export const AddNewTaskModal = () => {
               className="flex-1"
               name={subTask}
               id={subTask}
+              defaultValue={selectedTask?.subtasks.find(s => s._id === subTask)?.name}
             />
-            <span className={styles.closeIcon} onClick={() => { setSubtasks(current => current.filter(st => st !== subTask)) }}></span>
+            <span className={styles.closeIcon} onClick={() => setSubtasks(current => current.filter(st => st !== subTask))}></span>
           </div>
         ))}
 
@@ -86,15 +124,31 @@ export const AddNewTaskModal = () => {
         <label htmlFor="status">Status</label>
         <Select
           className="w-full"
+          id="status"
+          name="status"
           options={states}
           value={selectedStatus}
-          handleOptionChange={handleValueChange}
+          handleOptionChange={handleStatusChange}
         />
       </div>
 
-      <Button btnType="primary">Create Task</Button>
+      <Button
+        btnType="primary"
+        disabled={!hasChanges}
+      >
+        {isNew ? "Create Task" : "Save Changes"}
+      </Button>
     </form>
   )
+}
+
+function hasUpdates(task: ITask, form: HTMLFormElement): boolean {
+  const formData = new FormData(form)
+
+  return formData.get('title') !== task.title
+    || formData.get('description') !== task.description
+    || formData.get('status') !== task.status
+    || task.subtasks.some(st => formData.get(st._id as string) !== st.name)
 }
 
 export default AddNewTaskModal
