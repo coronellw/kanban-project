@@ -1,9 +1,9 @@
 import Sidebar from "~/elements/sidebar"
 import { useSetAtom } from "jotai"
 import { activeModalAtom } from "~/store"
-import ThemeSwitcher from "../theme-switcher"
+import ThemeSwitcher from "../../theme-switcher"
 
-import styles from "./sidebarModal.module.css"
+import styles from "./sidebar-modal.module.css"
 
 export const SidebarModal = () => {
   const setActiveModal = useSetAtom(activeModalAtom)

@@ -1,4 +1,4 @@
-export * from "./sidebarModal"
+export * from "./side-bar-modal"
 
 export * from "./add-new-task-modal"
 
