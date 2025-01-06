@@ -14,9 +14,15 @@ type SelectProps = {
   options?: Array<{ value: string, label: string }>
 } & React.ComponentPropsWithoutRef<'select'>
 
-const Select = ({ options = [], className, value, handleOptionChange, placeholder="Please make a choice", name }: SelectProps) => {
+const Select = ({ options = [], className, value, handleOptionChange, placeholder = "Please make a choice", name, disabled, required }: SelectProps) => {
   return (
-    <RadixSelect.Root value={value as string} onValueChange={handleOptionChange} name={name} >
+    <RadixSelect.Root
+      name={name}
+      disabled={disabled}
+      required={required}
+      value={value as string}
+      onValueChange={handleOptionChange}
+    >
       <RadixSelect.Trigger className={classNames(className, styles.trigger)}>
         <RadixSelect.Value placeholder={placeholder} />
         <RadixSelect.Icon>

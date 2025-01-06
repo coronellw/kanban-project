@@ -123,7 +123,6 @@ export const AddNewTaskModal = () => {
       <div className="flex flex-col gap-2">
         <label htmlFor="status">Status</label>
         <Select
-          className="w-full"
           id="status"
           name="status"
           options={states}

@@ -3,16 +3,20 @@ button {
 }
 
 .checkboxRoot {
-  @apply flex items-center justify-center shadow-lg bg-white w-4 h-4 rounded border-kgray/25;
+  @apply flex items-center justify-center shadow-lg bg-white w-4 h-4 rounded border-kgray/25 flex-shrink-0;
 }
 
 .checkboxRoot[data-state=checked],
 :global(.dark) .checkboxRoot[data-state=checked]{
   @apply bg-primary;
+
+  & ~ .checkboxLabel {
+    @apply line-through text-kgray;
+  }
 }
 
 :global(.dark) .checkboxRoot {
-  @apply bg-kgray-darkest;
+  @apply bg-kgray-dark;
 }
 
 .checkbox {
@@ -20,20 +24,15 @@ button {
 }
 
 :global(.dark) .checkbox {
-  @apply bg-kgray-dark hover:bg-primary/25;
+  @apply bg-kgray-darkest hover:bg-primary/25;
 }
 
-.label {
+.checkboxLabel {
   @apply text-body-m text-black;
 }
 
-:global(.dark) .label {
+:global(.dark) .checkboxLabel {
   @apply text-white;
-}
-
-button[data-state=checked]+.label,
-button[data-state=checked]+ :global(.dark) .label {
-  @apply line-through text-kgray;
 }
 
 .indicator {

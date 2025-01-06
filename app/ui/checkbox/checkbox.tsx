@@ -1,23 +1,27 @@
 import * as RadixCheckbox from "@radix-ui/react-checkbox"
 import styles from "./checkbox.module.css"
 import classNames from "classnames"
-import { useState } from "react"
-import { v4 } from "uuid"
 
 type checkboxProps = {
-  handleChange: () => void
+  handleChange?: () => void,
 } & React.ComponentPropsWithoutRef<'input'>
 
-const Checkbox = ({ children, className, checked, handleChange }: checkboxProps) => {
-  const [id] = useState(v4())
+const Checkbox = ({ children, className, checked, handleChange, defaultChecked, id, name }: checkboxProps) => {
 
-  return <div className={classNames(styles.checkbox, className)} onClick={handleChange}>
-    <RadixCheckbox.Root checked={checked} className={styles.checkboxRoot} id={id}>
+  return <div className={classNames(styles.checkbox, className)} >
+    <RadixCheckbox.Root
+      id={id}
+      name={name}
+      checked={checked}
+      className={styles.checkboxRoot}
+      defaultChecked={defaultChecked}
+      onCheckedChange={handleChange}
+    >
       <RadixCheckbox.Indicator>
-        {checked && <span className={styles.indicator}></span>}
+        <span className={styles.indicator}></span>
       </RadixCheckbox.Indicator>
     </RadixCheckbox.Root>
-    <label className={styles.label} onClick={handleChange} htmlFor={id}>{children}</label>
+    <label className={styles.checkboxLabel} htmlFor={id}>{children}</label>
   </div>
 }
 

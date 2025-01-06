@@ -14,7 +14,7 @@ import { useBoard } from "~/hooks/useBoard"
 
 const Board = () => {
   const columns = useAtomValue(ColumnsAtom)
-  const mouseSensor = useSensor(MouseSensor, { activationConstraint: { delay: 100, tolerance: 16 } })
+  const mouseSensor = useSensor(MouseSensor, { activationConstraint: { delay: 150, tolerance: 16 } })
   const touchSensor = useSensor(TouchSensor)
 
   const sensors = useSensors(mouseSensor, touchSensor)

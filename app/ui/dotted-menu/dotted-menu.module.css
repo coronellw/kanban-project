@@ -1,5 +1,5 @@
 .dots {
-  @apply w-1 h-1 bg-kgray rounded-full flex flex-col relative;
+  @apply min-w-1 min-h-1 bg-kgray rounded-full flex flex-col relative;
   @apply before:content-[''] before:w-1 before:h-1 before:bg-kgray before:rounded-full before:absolute before:top-2;
   @apply after:content-[''] after:w-1 after:h-1 after:bg-kgray after:rounded-full after:absolute after:top-[-8px];
 }

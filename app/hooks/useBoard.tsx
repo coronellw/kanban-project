@@ -12,7 +12,6 @@ export const useBoard = (board?: IBoard) => {
   let currentBoard = board || selectedBoard
 
   if (!currentBoard) {
-    // throw new Error("No board found, provide one or set the board atom")
     currentBoard = { _id: '', name: '', columns: [], version: 0 }
   }
 
@@ -79,8 +78,17 @@ export const useBoard = (board?: IBoard) => {
   }
 
   const addTask = (task: ITask) => {
-    const columnIndex = findColumnIndex(task._id)
+    const columnIndex = findColumnIndex(task.status as string)
+
     currentBoard.columns[columnIndex].tasks = [...currentBoard.columns[columnIndex].tasks, task]
+    saveBoard()
+  }
+
+  const toggleSubTaskCompletion = (task: ITask, subtTaskId: ID) => {
+    const columnIndex = findColumnIndex(task.status as string)
+    const {taskIndex} = findTaskIndex(task._id)
+
+    currentBoard.columns[columnIndex].tasks[taskIndex].subtasks = currentBoard.columns[columnIndex].tasks[taskIndex].subtasks.map(st => st._id === subtTaskId ? {...st, completed: !st.completed } : st)
     saveBoard()
   }
 
@@ -94,6 +102,7 @@ export const useBoard = (board?: IBoard) => {
     findTaskIndex,
     updateTask,
     moveTask,
-    addTask
+    addTask,
+    toggleSubTaskCompletion
   }
 }

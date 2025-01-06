@@ -1,6 +1,6 @@
 .trigger {
   @apply flex justify-between gap-4;
-  @apply px-4 py-2 bg-white text-body-m text-black rounded border border-kgray/25;
+  @apply px-4 py-2 bg-white text-body-m text-black rounded border border-kgray/25 border-solid;
   @apply focus:outline-primary focus:outline-1 focus:outline;
 }
 
