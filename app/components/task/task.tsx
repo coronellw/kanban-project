@@ -20,7 +20,7 @@ const Task = ({ task }: { task: ITask }) => {
 
   const updateSelectedTask = (task:ITask) => {
     setSelectedTask(task)
-    setModal(ModalWindows.AddNewTask)
+    setModal(ModalWindows.ViewTask)
   }
 
   return (

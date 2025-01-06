@@ -1,0 +1,11 @@
+.viewTask {
+  @apply flex flex-col gap-6 bg-white p-8 rounded md:w-1/3 w-[90%] my-4 max-w-[480px];
+
+  & .label {
+    @apply text-body-m text-kgray;
+  }
+}
+
+:global(.dark) .viewTask {
+  @apply bg-kgray-dark;
+}
