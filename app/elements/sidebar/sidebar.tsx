@@ -1,15 +1,15 @@
-import { useAtomValue, useAtom } from "jotai"
-import boardIcon from "~/assets/icon-board.svg"
-import { boardsAtom, selectedBoardAtom } from "~/store"
+import { useAtomValue, useAtom, useSetAtom } from "jotai"
+import { activeModalAtom, boardsAtom, selectedBoardAtom } from "~/store"
 
 import styles from "./sidebar.module.css"
 import classNames from "classnames"
-import type { IBoard } from "~/types"
+import { ModalWindows, type IBoard } from "~/types"
 import ThemeSwitcher from "~/components/theme-switcher"
 import VisibilityToggle from "~/components/visibility-toggle"
 
 const Sidebar = ({ className, ...props }: React.ComponentPropsWithoutRef<'aside'>) => {
   const boards = useAtomValue(boardsAtom)
+  const setModal = useSetAtom(activeModalAtom)
   const [currentBoard, setCurrentBoard] = useAtom(selectedBoardAtom)
 
   const handleBoardSelection = (board: IBoard) => {
@@ -35,7 +35,7 @@ const Sidebar = ({ className, ...props }: React.ComponentPropsWithoutRef<'aside'
               </span>
             </li>
           )}
-          <li className={classNames(styles.board, "text-primary")}>
+          <li className={classNames(styles.board, "text-primary")} onClick={() => setModal(ModalWindows.AddNewBoard)}>
             <span className={styles.icon}></span>
             <span>
               + Create New Board

@@ -1,12 +1,17 @@
-import { useAtom } from "jotai"
+import type { AxiosResponse } from "axios"
+import { useAtom, useSetAtom } from "jotai"
+import { useState } from "react"
+import { kanbanApi } from "~/api"
 
-import { selectedBoardAtom } from "~/store"
+import { boardsAtom, selectedBoardAtom } from "~/store"
 
-import type { IBoard, ITask } from "~/types"
+import type { IBoard, IColumn, ITask } from "~/types"
 
 type ID = number | string
 
 export const useBoard = (board?: IBoard) => {
+  const [loading, setLoading] = useState(false)
+  const reloadBoards = useSetAtom(boardsAtom)
   const [selectedBoard, setSelectedBoard] = useAtom(selectedBoardAtom)
 
   let currentBoard = board || selectedBoard
@@ -31,6 +36,18 @@ export const useBoard = (board?: IBoard) => {
     }
 
     return column
+  }
+
+  const updateColumn = async (column: IColumn) => {
+    await kanbanApi.patch(`/columns/${column._id}`, {...column, _id: undefined})
+    const columnIndex = findColumnIndex(column._id)
+    currentBoard.columns[columnIndex] = column
+    saveBoard()
+  }
+
+  const deleteColumn = async (columnId: ID) => {
+    const response:AxiosResponse<IColumn> = await kanbanApi.delete(`/columns/${columnId}`)
+    return response.status === 202 ? response.data : null
   }
 
   const findTaskIndex = (taskId: ID) => {
@@ -86,23 +103,42 @@ export const useBoard = (board?: IBoard) => {
 
   const toggleSubTaskCompletion = (task: ITask, subtTaskId: ID) => {
     const columnIndex = findColumnIndex(task.status as string)
-    const {taskIndex} = findTaskIndex(task._id)
+    const { taskIndex } = findTaskIndex(task._id)
 
-    currentBoard.columns[columnIndex].tasks[taskIndex].subtasks = currentBoard.columns[columnIndex].tasks[taskIndex].subtasks.map(st => st._id === subtTaskId ? {...st, completed: !st.completed } : st)
+    currentBoard.columns[columnIndex].tasks[taskIndex].subtasks = currentBoard.columns[columnIndex].tasks[taskIndex].subtasks.map(st => st._id === subtTaskId ? { ...st, completed: !st.completed } : st)
     saveBoard()
+  }
+
+  const addColumn = async (columnName: string, board: ID) => {
+    const response: AxiosResponse<IColumn> = await kanbanApi.post("/columns", {name: columnName, board})
+    return response.data
+  }
+
+  const addBoard = async (boardName: string, columns: string[] = []) => {
+    const response: AxiosResponse<IBoard> = await kanbanApi.post("/boards", { name: boardName })
+    const board = response.data
+    const boardId  = board._id
+
+    const promisedColumns = columns.map(col => addColumn(col, boardId))
+    await Promise.all(promisedColumns)
+    reloadBoards()
   }
 
 
   return {
     board: currentBoard,
+    loading,
     findColumn,
     findColumnIndex,
     getColumnFromTaskId,
+    updateColumn,
+    deleteColumn,
     findTask,
     findTaskIndex,
     updateTask,
     moveTask,
     addTask,
-    toggleSubTaskCompletion
+    toggleSubTaskCompletion,
+    addBoard
   }
 }

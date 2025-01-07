@@ -16,7 +16,9 @@ import { useBoard } from "~/hooks/useBoard"
 
 import type { ISubTask, ITask } from "~/types"
 
-import styles from "./add-new-task-modal.module.css"
+import addNewTaskModalStyles from "./add-new-task-modal.module.css"
+import baseStyles from "../base-modal.module.css"
+
 
 export const AddNewTaskModal = () => {
   const formRef = useRef<HTMLFormElement>(null)
@@ -78,7 +80,7 @@ export const AddNewTaskModal = () => {
       ref={formRef}
       onSubmit={handleSubmit}
       onChange={handleFormChange}
-      className={styles.newTaskModal}
+      className={baseStyles.baseModal}
     >
       <span className="text-heading-l">{isNew ? "Add New" : "Edit"} Task</span>
 
@@ -107,12 +109,13 @@ export const AddNewTaskModal = () => {
               id={subTask}
               defaultValue={selectedTask?.subtasks.find(s => s._id === subTask)?.name}
             />
-            <span className={styles.closeIcon} onClick={() => setSubtasks(current => current.filter(st => st !== subTask))}></span>
+            <span className={baseStyles.closeIcon} onClick={() => setSubtasks(current => current.filter(st => st !== subTask))}></span>
           </div>
         ))}
 
         <Button
           type="button"
+          className="flex"
           btnType="secondary"
           onClick={() => setSubtasks(current => [...current, v4()])}
         >
@@ -133,6 +136,7 @@ export const AddNewTaskModal = () => {
 
       <Button
         btnType="primary"
+        className="flex"
         disabled={!hasChanges}
       >
         {isNew ? "Create Task" : "Save Changes"}

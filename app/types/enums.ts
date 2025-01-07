@@ -3,4 +3,5 @@ export enum ModalWindows {
   Sidebar,
   ViewTask,
   AddNewTask,
+  AddNewBoard,
 }
