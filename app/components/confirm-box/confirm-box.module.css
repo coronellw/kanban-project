@@ -1,0 +1,7 @@
+.confirmBox {
+  @apply flex flex-col gap-6 items-center;
+}
+
+.cta {
+  @apply flex justify-around w-full gap-4 mb-2;
+}
