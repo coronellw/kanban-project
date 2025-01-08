@@ -43,6 +43,11 @@ export const AddNewTaskModal = () => {
     setHasChanges(isNew || hasUpdates(selectedTask, formRef.current))
   }
 
+  const handleAddNewSubtask = () => {
+    setSubtasks(current => [...current, v4()])
+    handleFormChange()
+  }
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (!formRef.current) return
@@ -117,7 +122,7 @@ export const AddNewTaskModal = () => {
           type="button"
           className="flex"
           btnType="secondary"
-          onClick={() => setSubtasks(current => [...current, v4()])}
+          onClick={handleAddNewSubtask}
         >
           +Add New Subtask
         </Button>
@@ -148,9 +153,15 @@ export const AddNewTaskModal = () => {
 function hasUpdates(task: ITask, form: HTMLFormElement): boolean {
   const formData = new FormData(form)
 
+  const staticFields = ['title','description','status']
+  const formObj = Object.fromEntries(formData)
+  const subtaskCount = Object.keys(formObj).filter(k => !staticFields.includes(k))
+  console.log({subtaskCount, originalLength: task.subtasks.length})
+
   return formData.get('title') !== task.title
     || formData.get('description') !== task.description
     || formData.get('status') !== task.status
+    || task.subtasks.length !== subtaskCount.length
     || task.subtasks.some(st => formData.get(st._id as string) !== st.name)
 }
 

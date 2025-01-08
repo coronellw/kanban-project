@@ -1,0 +1,15 @@
+.taskMenu {
+  @apply flex flex-col gap-4 p-4 bg-white rounded min-w-[192px];
+
+  & span:hover {
+    @apply opacity-70 cursor-pointer;
+  }
+}
+
+:global(.dark) .taskMenu {
+  @apply bg-kgray-darkest;
+}
+
+.menuClasses {
+  @apply min-w-24 z-30;
+}

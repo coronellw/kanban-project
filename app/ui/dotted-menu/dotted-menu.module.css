@@ -3,3 +3,7 @@
   @apply before:content-[''] before:w-1 before:h-1 before:bg-kgray before:rounded-full before:absolute before:top-2;
   @apply after:content-[''] after:w-1 after:h-1 after:bg-kgray after:rounded-full after:absolute after:top-[-8px];
 }
+
+.dottedMenu {
+  @apply flex cursor-pointer px-2 h-8 items-center;
+}

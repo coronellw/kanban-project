@@ -9,7 +9,7 @@ import { kanbanApi } from "~/api"
 import Button from "~/ui/button"
 import Select from "~/ui/select"
 import Checkbox from "~/ui/checkbox"
-import DottedMenu from "~/ui/dotted-menu"
+import { TaskMenu } from "~/elements/pop-over-menus"
 
 import styles from "./view-task-modal.module.css"
 
@@ -31,13 +31,9 @@ export const ViewTaskModal = () => {
 
   const toggleSubTask = async (subtaskId: string) => {
     try {
-      console.count('calling subtask toggle' + subtaskId)
-      await kanbanApi.patch(`/tasks/${task._id}/subtask/toggle`, { subtaskId })
-
       toggleSubTaskCompletion(task, subtaskId)
-
     } catch (error) {
-
+      console.error(error)
     }
   }
 
@@ -45,7 +41,7 @@ export const ViewTaskModal = () => {
     <form className={styles.viewTask}>
       <span className="flex justify-between items-center">
         <span className="text-heading-l">{task.title}</span>
-        <DottedMenu />
+        <TaskMenu />
       </span>
       <span className="text-body-l">{task.description}</span>
       <span className="text-body-m">
