@@ -4,4 +4,5 @@ export enum ModalWindows {
   ViewTask,
   AddNewTask,
   AddNewBoard,
+  ConfirmTaskDeletion
 }

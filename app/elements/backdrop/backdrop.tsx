@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react"
 import { useAtom } from "jotai"
 import styles from "./backdrop.module.css"
 import { activeModalAtom } from "~/store"
-import { SidebarModal, AddNewTaskModal, ViewTaskModal, BoardModal } from "~/components/modals"
+import { SidebarModal, AddNewTaskModal, ViewTaskModal, BoardModal, ConfirmTaskDeletionModal } from "~/components/modals"
 import { ModalWindows } from "~/types"
 
 const Backdrop = () => {
@@ -36,6 +36,7 @@ const Backdrop = () => {
     {ModalWindows.AddNewTask === activeModal && <AddNewTaskModal />}
     {ModalWindows.ViewTask === activeModal && <ViewTaskModal />}
     {ModalWindows.AddNewBoard === activeModal && <BoardModal isNew />}
+    {ModalWindows.ConfirmTaskDeletion === activeModal && <ConfirmTaskDeletionModal />}
   </div>
 }
 
