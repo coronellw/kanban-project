@@ -5,5 +5,5 @@
 }
 
 .dottedMenu {
-  @apply flex cursor-pointer px-2 h-8 items-center;
+  @apply cursor-pointer px-2 h-8 items-center outline-0;
 }

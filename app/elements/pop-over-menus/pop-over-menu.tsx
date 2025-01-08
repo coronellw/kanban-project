@@ -3,9 +3,9 @@ import classNames from "classnames"
 
 import styles from "./pop-over-menu.module.css"
 
-type PopOverMenuProps = { trigger: React.ReactNode } & React.ComponentPropsWithoutRef<'div'>
+type PopOverMenuProps = { trigger: React.ReactNode } & React.ComponentPropsWithoutRef<'div'> & Popover.PopoverContentProps
 
-export const PopOverMenu = ({ children, trigger, className }: PopOverMenuProps) => {
+export const PopOverMenu = ({ children, trigger, className, align="center" }: PopOverMenuProps) => {
   return (
     <Popover.Root>
       <Popover.Trigger asChild>
@@ -13,7 +13,7 @@ export const PopOverMenu = ({ children, trigger, className }: PopOverMenuProps) 
       </Popover.Trigger>
 
       <Popover.Portal>
-        <Popover.Content className={classNames(styles.content, className)}>
+        <Popover.Content align={align} className={classNames(styles.content, className)}>
           {children}
         </Popover.Content>
       </Popover.Portal>

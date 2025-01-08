@@ -135,6 +135,14 @@ export const useBoard = (board?: IBoard) => {
     reloadBoards()
   }
 
+  const deleteBoard = async (boardId: ID) => {
+    const response: AxiosResponse<IBoard> = await kanbanApi.delete(`/boards/${boardId}`)
+
+    if (response.status === 200) {
+      reloadBoards()
+    }
+  }
+
 
   return {
     board: currentBoard,
@@ -151,6 +159,7 @@ export const useBoard = (board?: IBoard) => {
     moveTask,
     addTask,
     toggleSubTaskCompletion,
-    addBoard
+    addBoard,
+    deleteBoard
   }
 }

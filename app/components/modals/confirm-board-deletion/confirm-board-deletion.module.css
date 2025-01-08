@@ -1,0 +1,11 @@
+.content {
+  @apply flex flex-col gap-6;
+}
+
+.title {
+  @apply text-heading-l text-secondary;
+}
+
+.description {
+  @apply text-body-l text-kgray;
+}

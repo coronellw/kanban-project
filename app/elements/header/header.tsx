@@ -7,6 +7,7 @@ import Button from "~/ui/button"
 import DottedMenu from "~/ui/dotted-menu"
 import { ModalWindows } from "~/types"
 import { useCallback } from "react"
+import { BoardMenu } from "../pop-over-menus"
 
 const Header = ({ className, ...props }: React.ComponentPropsWithoutRef<'header'>) => {
   const board = useAtomValue(selectedBoardAtom)
@@ -35,7 +36,7 @@ const Header = ({ className, ...props }: React.ComponentPropsWithoutRef<'header'
           <Button
             btnSize="large"
             btnType="primary"
-            className={styles.buttonNormal}
+            className={styles.desktop}
             onClick={handleNewTask}
             disabled={!board || !board.columns?.length}
           >
@@ -44,13 +45,14 @@ const Header = ({ className, ...props }: React.ComponentPropsWithoutRef<'header'
           <Button
             btnSize="large"
             btnType="primary"
-            className={styles.buttonMobile}
+            className={styles.mobile}
             disabled={!board || !board.columns?.length}
             onClick={handleNewTask}
           >
             +
           </Button>
-          <DottedMenu onClick={handleModal(ModalWindows.Sidebar)} />
+          <DottedMenu className={styles.mobile} onClick={handleModal(ModalWindows.Sidebar)} />
+          <BoardMenu triggerClassName={styles.desktop} />
         </span>
       </div>
     </header>

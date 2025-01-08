@@ -20,11 +20,11 @@
   @apply text-heading-xl;
 }
 
-.buttonNormal {
+.desktop {
   @apply hidden md:flex;
 }
 
-.buttonMobile {
+.mobile {
   @apply flex md:hidden;
 }
 

@@ -7,3 +7,5 @@ export * from "./view-task-modal"
 export * from "./board-modal"
 
 export * from "./confirm-task-deletion"
+
+export * from "./confirm-board-deletion"
