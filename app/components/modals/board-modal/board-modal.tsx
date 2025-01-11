@@ -1,15 +1,12 @@
 import { useAtomValue, useSetAtom } from "jotai"
-import { useRef, useState } from "react"
+import { useMemo, useRef, useState } from "react"
 import { activeModalAtom, selectedBoardAtom } from "~/store"
 import { v4 } from "uuid"
 
 import Button from "~/ui/button"
 import TextField from "~/ui/text-field"
-
-import { kanbanApi } from "~/api"
 import { useBoard } from "~/hooks/useBoard"
 
-import type { AxiosResponse } from "axios"
 import type { IBoard } from "~/types"
 
 import boardStyles from "./board-modal.module.css"
@@ -19,9 +16,10 @@ export const BoardModal = ({ isNew = false }: { isNew?: boolean }) => {
   const selectedBoard = useAtomValue(selectedBoardAtom)
   const setModal = useSetAtom(activeModalAtom)
   const formRef = useRef<HTMLFormElement>(null)
-  const [columns, setColumns] = useState<string[]>([])
+  const initialColumns = useMemo(() => selectedBoard?.columns.map(c => c._id), [selectedBoard]) || []
+  const [columns, setColumns] = useState<string[]>(initialColumns)
   const [hasChanges, setHasChanges] = useState<boolean>(isNew)
-  const { addBoard, updateColumn, findColumn, deleteColumn } = useBoard()
+  const { addBoard, updateBoard, findColumn, deleteColumn } = useBoard()
 
   const handleFormChange = () => {
     if (isNew || !selectedBoard || !formRef.current) return
@@ -31,7 +29,7 @@ export const BoardModal = ({ isNew = false }: { isNew?: boolean }) => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    if (!formRef.current) {
+    if (!formRef.current || !selectedBoard) {
       return
     }
     try {
@@ -40,19 +38,25 @@ export const BoardModal = ({ isNew = false }: { isNew?: boolean }) => {
       const name = formData.get('name')
       const columnsNames = columns.map(c => formData.get(c) as string)
 
-      let response: AxiosResponse<IBoard>
-
       if (isNew) {
         await addBoard(name as string, columnsNames)
         setModal(0)
         return
       }
+      const modifiedColumns = selectedBoard.columns
+        .filter(col => col.name !== formData.get(col._id))
+        .map(col => ({ ...col, name: formData.get(col._id) as string }))
 
-      response = await kanbanApi.patch("/boards", { name })
+      const existingColumnsIds = selectedBoard.columns.map(col => col._id)
 
+      const newColumns = columns
+        .filter(col => !existingColumnsIds.includes(col))
+        .map(col => ({ name: formData.get(col) as string }))
 
+      updateBoard({ _id: selectedBoard._id, name: name as string }, [...modifiedColumns, ...newColumns])
+      setModal(0)
     } catch (error) {
-
+      console.error(error)
     }
   }
   const handleColumnDeletion = async (columnId: string) => {
@@ -62,19 +66,15 @@ export const BoardModal = ({ isNew = false }: { isNew?: boolean }) => {
     }
     const column = findColumn(columnId)
 
-    if (!column) {
-      alert(`No column with id ${columnId} found to delete`)
-      return
-    }
-
-    const hasTasks = column.tasks.length
-    if (!!hasTasks) {
-      const shouldContinue = confirm(`The column '${column.name}' has ${hasTasks} task(s), \nif you choose to continue all related tasks and subtasks will be deleted`)
-
-      if (!shouldContinue) return
-
+    if (column) {
+      if (!!column.tasks.length) {
+        const shouldContinue = confirm(`The column '${column.name}' has ${column.tasks.length} task(s), \nif you choose to continue all related tasks and subtasks will be deleted`)
+        if (!shouldContinue) return
+      }
       await deleteColumn(columnId)
     }
+
+    setColumns(current => current.filter(col => col !== columnId))
   }
 
   return (
@@ -99,6 +99,7 @@ export const BoardModal = ({ isNew = false }: { isNew?: boolean }) => {
               className="flex-1"
               name={column}
               id={column}
+              defaultValue={findColumn(column)?.name}
             />
             <span className={baseStyles.closeIcon} onClick={() => handleColumnDeletion(column)}></span>
           </div>
@@ -126,7 +127,12 @@ export const BoardModal = ({ isNew = false }: { isNew?: boolean }) => {
 
 function hasUpdates(board: IBoard, form: HTMLFormElement): boolean {
   const formData = new FormData(form)
-  return board.name !== formData.get('name') || board.columns.some(col => col.name !== formData.get(col._id))
+  const formObj = Object.entries(formData)
+  const existingColumns = board.columns.map(c => c._id)
+  existingColumns.push('name')
+  const hasNewColumns = !!Object.keys(formObj).filter(k => existingColumns.includes(k))
+
+  return board.name !== formData.get('name') || hasNewColumns || board.columns.some(col => col.name !== formData.get(col._id))
 }
 
 export default BoardModal

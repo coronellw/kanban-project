@@ -10,7 +10,6 @@ import type { IBoard, IColumn, ITask } from "~/types"
 type ID = number | string
 
 export const useBoard = (board?: IBoard) => {
-  const [loading, setLoading] = useState(false)
   const reloadBoards = useSetAtom(boardsAtom)
   const [selectedBoard, setSelectedBoard] = useAtom(selectedBoardAtom)
 
@@ -22,6 +21,7 @@ export const useBoard = (board?: IBoard) => {
 
   const saveBoard = () => setSelectedBoard({ ...currentBoard, version: currentBoard.version ? currentBoard.version + 1 : 0 })
 
+  // COLUMNS
   const findColumnIndex = (columnId: ID) => currentBoard.columns.findIndex(c => c._id === columnId)
 
   const findColumn = (columnId: ID) => currentBoard.columns.find(c => c._id === columnId)
@@ -38,18 +38,29 @@ export const useBoard = (board?: IBoard) => {
     return column
   }
 
+  const addColumn = async (columnName: string, board: ID) => {
+    const response: AxiosResponse<IColumn> = await kanbanApi.post("/columns", { name: columnName, board })
+    currentBoard.columns.push({ ...response.data, tasks: [] })
+    saveBoard()
+    return response.data
+  }
+
   const updateColumn = async (column: IColumn) => {
     await kanbanApi.patch(`/columns/${column._id}`, { ...column, _id: undefined })
     const columnIndex = findColumnIndex(column._id)
     currentBoard.columns[columnIndex] = column
     saveBoard()
+    return column
   }
 
   const deleteColumn = async (columnId: ID) => {
     const response: AxiosResponse<IColumn> = await kanbanApi.delete(`/columns/${columnId}`)
+    currentBoard.columns = currentBoard.columns.filter(column => column._id !== columnId)
+    saveBoard()
     return response.status === 202 ? response.data : null
   }
 
+  // TASKS
   const findTaskIndex = (taskId: ID) => {
     const column = getColumnFromTaskIdOrError(taskId)
 
@@ -120,11 +131,7 @@ export const useBoard = (board?: IBoard) => {
     saveBoard()
   }
 
-  const addColumn = async (columnName: string, board: ID) => {
-    const response: AxiosResponse<IColumn> = await kanbanApi.post("/columns", { name: columnName, board })
-    return response.data
-  }
-
+  // BOARDS
   const addBoard = async (boardName: string, columns: string[] = []) => {
     const response: AxiosResponse<IBoard> = await kanbanApi.post("/boards", { name: boardName })
     const board = response.data
@@ -137,19 +144,39 @@ export const useBoard = (board?: IBoard) => {
 
   const deleteBoard = async (boardId: ID) => {
     const response: AxiosResponse<IBoard> = await kanbanApi.delete(`/boards/${boardId}`)
-
+    setSelectedBoard({ columns: [] as IColumn[] } as IBoard)
     if (response.status === 200) {
       reloadBoards()
     }
   }
 
+  const updateBoard = async (board: Pick<IBoard, "name" | "owner" | "_id">, columns: { _id?: string, name: string }[]) => {
+    let response
+    if (board.name !== currentBoard.name) {
+      response = await kanbanApi.patch(`/boards/${board._id}`, { name: board.name })
+    }
+    let promises = []
+    if (!response || response.status === 202) {
+      promises = columns.map(column => {
+        const columnIndex = column._id ? findColumnIndex(column._id) : -1
+        console.log(`Column ${columnIndex < 0 ? "not found" : ""} with id ${column._id} will be ${columnIndex > 0 ? "updated" : "created"} with name ${column.name}`)
+
+        return columnIndex > 0 ? kanbanApi.patch(`/columns/${column._id}`, { name: column.name, board: board._id }) : addColumn(column.name, board._id)
+      })
+      await Promise.allSettled(promises)
+    }
+    reloadBoards()
+    return currentBoard
+
+  }
+
 
   return {
     board: currentBoard,
-    loading,
     findColumn,
     findColumnIndex,
     getColumnFromTaskId,
+    addColumn,
     updateColumn,
     deleteColumn,
     findTask,
@@ -160,6 +187,7 @@ export const useBoard = (board?: IBoard) => {
     addTask,
     toggleSubTaskCompletion,
     addBoard,
-    deleteBoard
+    deleteBoard,
+    updateBoard
   }
 }

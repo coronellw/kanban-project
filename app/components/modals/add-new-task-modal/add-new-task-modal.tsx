@@ -156,7 +156,6 @@ function hasUpdates(task: ITask, form: HTMLFormElement): boolean {
   const staticFields = ['title','description','status']
   const formObj = Object.fromEntries(formData)
   const subtaskCount = Object.keys(formObj).filter(k => !staticFields.includes(k))
-  console.log({subtaskCount, originalLength: task.subtasks.length})
 
   return formData.get('title') !== task.title
     || formData.get('description') !== task.description

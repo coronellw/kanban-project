@@ -1,11 +1,10 @@
-import { atom } from "jotai"
-import { atomWithRefresh } from "jotai/utils"
+import { atomWithRefresh, atomWithStorage } from "jotai/utils"
 
 import { kanbanApi } from "~/api"
 import { userAtom } from "./userAtoms"
 
 import type { AxiosResponse } from "axios"
-import type { IBoard } from "~/types/board"
+import type { IBoard, IColumn } from "~/types/board"
 
 export const boardsAtom = atomWithRefresh<Promise<IBoard[]>>(
   async (get) => {
@@ -17,4 +16,4 @@ export const boardsAtom = atomWithRefresh<Promise<IBoard[]>>(
     return boardsResponse.data
   }
 )
-export const selectedBoardAtom = atom<IBoard & { version?: number }>()
+export const selectedBoardAtom = atomWithStorage<IBoard & { version?: number }>("current-board", <IBoard>{ columns: [] as IColumn[] })

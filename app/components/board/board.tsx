@@ -1,24 +1,29 @@
 import { DndContext, MouseSensor, TouchSensor, useSensor, useSensors, type DragEndEvent } from "@dnd-kit/core"
 import { useAtomValue } from "jotai"
-import { ColumnsAtom } from "~/store"
+import { ColumnsAtom, selectedBoardAtom } from "~/store"
 import { kanbanApi } from "~/api"
 
+import { useBoard } from "~/hooks/useBoard"
 import EmptyBoard from "./empty-board"
-
+import NoBoard from "./no-board"
 import Column from "~/components/column"
 import AddNewColumn from "~/components/column/add-column"
 
 import type { ITask } from "~/types"
 import styles from "./board.module.css"
-import { useBoard } from "~/hooks/useBoard"
 
 const Board = () => {
+  const selectedBoard = useAtomValue(selectedBoardAtom)
   const columns = useAtomValue(ColumnsAtom)
   const mouseSensor = useSensor(MouseSensor, { activationConstraint: { delay: 150, tolerance: 16 } })
   const touchSensor = useSensor(TouchSensor)
 
   const sensors = useSensors(mouseSensor, touchSensor)
   const { moveTask } = useBoard()
+
+  if (!selectedBoard._id) {
+    return <NoBoard />
+  }
 
   if (!columns?.length) {
     return <EmptyBoard />
