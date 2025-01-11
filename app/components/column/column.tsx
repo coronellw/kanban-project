@@ -23,7 +23,7 @@ const Column = ({ column, index }: { column: IColumn, index: number }) => {
       >
         <span className={styles.columnHeader}>
           <span className={styles.columnColorCircle} style={style}></span>
-          <h2 className="text-heading-s capitalize">{column.name}</h2>
+          <h2 className="text-heading-s capitalize">{column.name} ({column.tasks.length})</h2>
         </span>
         {column.tasks.map(task => <Task key={task._id} task={task} />)}
       </div>
