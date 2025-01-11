@@ -16,7 +16,7 @@ const Board = () => {
   const selectedBoard = useAtomValue(selectedBoardAtom)
   const columns = useAtomValue(ColumnsAtom)
   const mouseSensor = useSensor(MouseSensor, { activationConstraint: { delay: 150, tolerance: 16 } })
-  const touchSensor = useSensor(TouchSensor)
+  const touchSensor = useSensor(TouchSensor, { activationConstraint: { delay: 150, tolerance: 16 } })
 
   const sensors = useSensors(mouseSensor, touchSensor)
   const { moveTask } = useBoard()

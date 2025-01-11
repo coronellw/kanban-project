@@ -17,7 +17,7 @@ export const BoardModal = ({ isNew = false }: { isNew?: boolean }) => {
   const setModal = useSetAtom(activeModalAtom)
   const formRef = useRef<HTMLFormElement>(null)
   const initialColumns = useMemo(() => selectedBoard?.columns.map(c => c._id), [selectedBoard]) || []
-  const [columns, setColumns] = useState<string[]>(initialColumns)
+  const [columns, setColumns] = useState<string[]>(isNew ? [] : initialColumns)
   const [hasChanges, setHasChanges] = useState<boolean>(isNew)
   const { addBoard, updateBoard, findColumn, deleteColumn } = useBoard()
 
