@@ -1,5 +1,5 @@
 .board {
-  @apply grid grid-flow-col auto-cols-[17.5rem] gap-6 overflow-x-auto min-h-[calc(100vh-147px)];
+  @apply grid grid-flow-col auto-cols-[17.5rem] gap-6 overflow-x-auto sm:min-h-[calc(100vh-147px)] min-h-[calc(100vh-88px)];
 }
 
 :global(.emptyBoard) {

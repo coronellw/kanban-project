@@ -4,7 +4,6 @@ import { useAtomValue, useSetAtom } from "jotai"
 import { activeModalAtom, ColumnsAtom, selectedTaskAtom } from "~/store"
 import { capitalize } from "~/utils"
 import { useBoard } from "~/hooks/useBoard"
-import { kanbanApi } from "~/api"
 
 import Button from "~/ui/button"
 import Select from "~/ui/select"
@@ -12,6 +11,7 @@ import Checkbox from "~/ui/checkbox"
 import { TaskMenu } from "~/elements/pop-over-menus"
 
 import styles from "./view-task-modal.module.css"
+import baseStyles from "../base-modal.module.css"
 
 export const ViewTaskModal = () => {
   const task = useAtomValue(selectedTaskAtom)
@@ -38,7 +38,7 @@ export const ViewTaskModal = () => {
   }
 
   return (
-    <form className={styles.viewTask}>
+    <form className={baseStyles.baseModal}>
       <span className="flex justify-between items-center">
         <span className="text-heading-l">{task.title}</span>
         <TaskMenu />
