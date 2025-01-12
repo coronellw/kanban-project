@@ -1,8 +1,11 @@
-import { redirect } from "react-router"
+import { redirect, useNavigate } from "react-router"
 import { login } from "~/authentication/user"
 import Login from "~/elements/login"
+import { useAtomValue } from "jotai"
+import { userAtom } from "~/store"
 
 import type { Route } from "./+types/home"
+import { useEffect } from "react"
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -29,6 +32,16 @@ export async function clientAction({ request }: Route.ActionArgs) {
 }
 
 export default function Home() {
+  const user = useAtomValue(userAtom)
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (!!user?._id) {
+      console.log("user found", user)
+      navigate("/home")
+    }
+  }, [user])
+
   return (
     <Login />
   )
