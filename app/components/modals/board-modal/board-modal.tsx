@@ -11,6 +11,7 @@ import type { IBoard } from "~/types"
 
 import boardStyles from "./board-modal.module.css"
 import baseStyles from "../base-modal.module.css"
+import ColumnField from "./column-field"
 
 export const BoardModal = ({ isNew = false }: { isNew?: boolean }) => {
   const selectedBoard = useAtomValue(selectedBoardAtom)
@@ -64,16 +65,11 @@ export const BoardModal = ({ isNew = false }: { isNew?: boolean }) => {
       setColumns(current => current.filter(col => col !== columnId))
       return
     }
-    const column = findColumn(columnId)
+    const isNewColumn = !findColumn(columnId)
 
-    if (column) {
-      if (!!column.tasks.length) {
-        const shouldContinue = confirm(`The column '${column.name}' has ${column.tasks.length} task(s), \nif you choose to continue all related tasks and subtasks will be deleted`)
-        if (!shouldContinue) return
-      }
+    if (!isNewColumn) {
       await deleteColumn(columnId)
     }
-
     setColumns(current => current.filter(col => col !== columnId))
   }
 
@@ -94,15 +90,7 @@ export const BoardModal = ({ isNew = false }: { isNew?: boolean }) => {
       <div className="flex flex-col gap-3">
         <label htmlFor="columns">Columns</label>
         {columns.map((column) => (
-          <div className="flex items-center gap-4" key={column}>
-            <TextField
-              className="flex-1"
-              name={column}
-              id={column}
-              defaultValue={findColumn(column)?.name}
-            />
-            <span className={baseStyles.closeIcon} onClick={() => handleColumnDeletion(column)}></span>
-          </div>
+          <ColumnField key={column} column={column} onDelete={handleColumnDeletion} />
         ))}
 
         <Button
