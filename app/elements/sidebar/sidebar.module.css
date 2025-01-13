@@ -22,7 +22,7 @@
 }
 
 .board {
-  @apply flex items-center gap-4 py-4 px-8 cursor-pointer;
+  @apply flex items-center gap-4 pt-[14px] pb-[15px] px-8 cursor-pointer text-heading-m;
 }
 
 .board:hover {
@@ -52,6 +52,6 @@
 }
 
 .options {
-  @apply flex-col gap-4 mb-8 hidden;
+  @apply flex-col gap-2 mb-8 ml-6 hidden;
   @apply sm:flex;
 }

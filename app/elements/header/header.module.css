@@ -5,7 +5,7 @@
 
 .logo {
   @apply sm:w-[300px] sm:h-24 w-6 h-6 text-transparent text-[0px] border-r border-line;
-  @apply bg-[url('../../assets/logo-mobile.svg?url')] sm:bg-[url('../../assets/logo-dark.svg?url')] bg-no-repeat bg-center;
+  @apply bg-[url('../../assets/logo-mobile.svg?url')] sm:bg-[url('../../assets/logo-dark.svg?url')] bg-no-repeat bg-[left_34px_center];
 }
 
 :global(.dark) .logo{
@@ -29,5 +29,5 @@
 }
 
 .cta {
-  @apply flex items-center gap-8;
+  @apply flex items-center gap-4;
 }

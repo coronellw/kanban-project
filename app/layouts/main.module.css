@@ -4,7 +4,7 @@
 }
 
 .main {
-  @apply bg-line text-kgray-darkest h-full w-full;
+  @apply bg-kgray-light text-kgray-darkest h-full w-full;
 }
 
 :global(.dark) .main {

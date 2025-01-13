@@ -1,21 +1,17 @@
-.icon {
-  @apply w-5 h-5 bg-kgray;
-}
-
 .light {
-  composes: icon;
+  @apply w-[18px] h-[18px] bg-kgray;
   mask-image: url("../../assets/icon-light-theme.svg");
   mask-repeat: no-repeat;
 }
 
 .dark {
-  composes: icon;
+  @apply w-[15px] h-[15px] bg-kgray;
   mask-image: url("../../assets/icon-dark-theme.svg");
   mask-repeat: no-repeat;
 }
 
 .wrapper {
-  @apply flex justify-evenly items-center w-[250px] py-4 bg-kgray-light rounded-md;
+  @apply flex justify-center items-center gap-6 w-[250px] py-4 bg-kgray-light rounded-md;
 }
 
 :global(.dark) .wrapper {

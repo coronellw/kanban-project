@@ -1,5 +1,5 @@
 .visibility {
-  @apply flex gap-4 pl-8 py-4 text-kgray;
+  @apply flex gap-4 py-4 text-kgray text-heading-m;
 }
 
 .visibility:hover {

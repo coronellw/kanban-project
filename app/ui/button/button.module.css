@@ -1,5 +1,5 @@
 .button {
-  @apply items-center justify-center text-white font-bold py-2 px-4 rounded-full text-heading-l;
+  @apply items-center justify-center text-white font-bold pl-[24px] pt-[15px] pr-[25px] pb-[14px] rounded-full text-heading-m;
 }
 
 .normal {
@@ -20,7 +20,11 @@ button[disabled] {
 }
 
 .primary[disabled] {
-  @apply bg-primary-light;
+  @apply bg-primary/25;
+}
+
+:global(.dark) .primary[disabled] {
+  @apply text-white/25
 }
 
 .secondary {
