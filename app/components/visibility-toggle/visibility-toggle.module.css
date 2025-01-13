@@ -11,7 +11,7 @@
 }
 
 .icon-eye-closed {
-  @apply w-4 h-4 bg-kgray;
+  @apply w-4 h-4 bg-kgray ml-2;
   mask-image: url('../../assets/icon-hide-sidebar.svg');
   mask-repeat: no-repeat;
 }

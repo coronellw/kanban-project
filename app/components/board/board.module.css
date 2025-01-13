@@ -3,5 +3,5 @@
 }
 
 :global(.emptyBoard) {
-  @apply flex flex-col gap-8 justify-center text-kgray;
+  @apply flex flex-col gap-8 justify-center text-kgray -translate-y-11;
 }
