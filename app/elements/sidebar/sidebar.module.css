@@ -1,5 +1,5 @@
 .sidebar {
-  @apply hidden justify-between pt-4 pr-6 rounded-lg sm:rounded-none bg-white;
+  @apply hidden justify-between pt-[15px] pr-6 rounded-lg sm:rounded-none bg-white;
   @apply border-r border-r-line border-solid;
   @apply sm:min-w-[300px] sm:flex sm:flex-col sm:relative;
   @apply sm:top-auto sm:left-auto sm:translate-x-0 sm:translate-y-0;

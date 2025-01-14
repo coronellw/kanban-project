@@ -9,7 +9,7 @@
 }
 
 :global(.sidebarClosed) .logo {
-  @apply border-b-line border-b border-solid shadow-sm shadow-line;
+  @apply border-b-line sm:border-b sm:border-solid sm:shadow-sm shadow-line;
 }
 
 :global(.dark) :global(.sidebarClosed) .logo {
@@ -21,7 +21,7 @@
 }
 
 .details {
-  @apply flex justify-between items-center flex-1 pl-6 pr-8 self-stretch border-b-line border-b border-solid shadow-sm shadow-line;
+  @apply flex justify-between items-center flex-1 pl-6 pr-8 pt-[29px] pb-[37px] self-stretch border-b-line sm:border-b border-solid sm:shadow-sm shadow-line;
 }
 
 :global(.dark) .details {
