@@ -159,7 +159,6 @@ export const useBoard = (board?: IBoard) => {
     if (!response || response.status === 202) {
       promises = columns.map(column => {
         const columnIndex = column._id ? findColumnIndex(column._id) : -1
-        console.log(`Column ${columnIndex < 0 ? "not found" : ""} with id ${column._id} will be ${columnIndex > 0 ? "updated" : "created"} with name ${column.name}`)
 
         return columnIndex > 0 ? kanbanApi.patch(`/columns/${column._id}`, { name: column.name, board: board._id }) : addColumn(column.name, board._id)
       })
