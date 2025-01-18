@@ -1,5 +1,5 @@
 import type { AxiosResponse } from "axios"
-import { useAtom, useSetAtom } from "jotai"
+import { useAtom } from "jotai"
 import { kanbanApi } from "~/api"
 import { boardsAtom, selectedBoardAtom } from "~/store"
 import type { IBoard, IColumn, ITask } from "~/types"
@@ -7,7 +7,7 @@ import type { IBoard, IColumn, ITask } from "~/types"
 type ID = number | string
 
 export const useBoard = (board?: IBoard) => {
-  const reloadBoards = useSetAtom(boardsAtom)
+  const [boards, reloadBoards] = useAtom(boardsAtom)
   const [selectedBoard, setSelectedBoard] = useAtom(selectedBoardAtom)
   let currentBoard = board || selectedBoard || { _id: '', name: '', columns: [], version: 0 }
 
@@ -44,10 +44,18 @@ export const useBoard = (board?: IBoard) => {
     return response.data
   }
 
-  const updateColumn = async (column: IColumn) => {
-    await kanbanApi.patch(`/columns/${column._id}`, { ...column, _id: undefined })
+  const updateColumn = async (column: Omit<IColumn, "tasks">) => {
+    await kanbanApi.patch(
+      `/columns/${column._id}`, 
+      { ...column, 
+        _id: undefined,
+        id: undefined,
+        __v: undefined, 
+        tasks: undefined 
+      }
+    )
     const columnIndex = findColumnIndexOrThrow(column._id)
-    currentBoard.columns[columnIndex] = column
+    currentBoard.columns[columnIndex] = {...column, tasks: currentBoard.columns[columnIndex].tasks}
     saveBoard()
     return column
   }
@@ -128,18 +136,29 @@ export const useBoard = (board?: IBoard) => {
   }
 
   const updateBoard = async (board: Pick<IBoard, "name" | "owner" | "_id">, columns: { _id?: string, name: string }[]) => {
-    let response
-    if (board.name !== currentBoard.name) {
-      response = await kanbanApi.patch(`/boards/${board._id}`, { name: board.name })
+    try {
+      let response;
+      if (board.name !== currentBoard.name) {
+        response = await kanbanApi.patch(`/boards/${board._id}`, { name: board.name });
+      }
+
+      if (!response || response.status === 202) {
+        const columnPromises = columns.map(column => {
+          const columnIndex = column._id ? findColumnIndexOrThrow(column._id) : -1
+          return columnIndex >= 0
+            ? updateColumn({ ...currentBoard.columns[columnIndex], name: column.name })
+            : addColumn(column.name, board._id)
+        });
+
+        await Promise.allSettled(columnPromises)
+      }
+
+      await reloadBoards()
+      return currentBoard
+    } catch (error) {
+      console.error("Failed to update board:", error)
+      throw error;
     }
-    if (!response || response.status === 202) {
-      await Promise.allSettled(columns.map(column => {
-        const columnIndex = column._id ? findColumnIndexOrThrow(column._id) : -1
-        return columnIndex > 0 ? kanbanApi.patch(`/columns/${column._id}`, { name: column.name, board: board._id }) : addColumn(column.name, board._id)
-      }))
-    }
-    reloadBoards()
-    return currentBoard
   }
 
   return {
