@@ -1,5 +1,5 @@
 import type { AxiosResponse } from "axios"
-import { useAtom } from "jotai"
+import { useAtom, useSetAtom } from "jotai"
 import { kanbanApi } from "~/api"
 import { boardsAtom, selectedBoardAtom } from "~/store"
 import type { IBoard, IColumn, ITask } from "~/types"
@@ -7,7 +7,7 @@ import type { IBoard, IColumn, ITask } from "~/types"
 type ID = number | string
 
 export const useBoard = (board?: IBoard) => {
-  const [boards, reloadBoards] = useAtom(boardsAtom)
+  const reloadBoards = useSetAtom(boardsAtom)
   const [selectedBoard, setSelectedBoard] = useAtom(selectedBoardAtom)
   let currentBoard = board || selectedBoard || { _id: '', name: '', columns: [], version: 0 }
 
