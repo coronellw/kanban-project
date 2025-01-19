@@ -3,6 +3,10 @@
   @apply sm:grid-cols-[300px_minmax(calc(100dvw-320px),1fr)] sm:grid-rows-[97px_1fr];
 }
 
+:global(.sidebarClosed).wrapper {
+  @apply grid-cols-[210px_minmax(calc(100dvw-240px),1fr)];
+}
+
 .main {
   @apply bg-kgray-light text-kgray-darkest h-full w-full;
 }
