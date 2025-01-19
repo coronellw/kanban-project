@@ -52,6 +52,14 @@
 }
 
 .options {
-  @apply flex-col gap-2 mb-8 ml-6 hidden;
+  @apply flex-col gap-2 mb-8 hidden;
   @apply sm:flex;
+}
+
+.toggle {
+  @apply pl-6 cursor-pointer;
+}
+
+.theme {
+  @apply ml-6 cursor-pointer;
 }
