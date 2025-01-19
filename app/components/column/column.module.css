@@ -1,5 +1,5 @@
 .column {
-  @apply flex flex-col gap-4;
+  @apply flex flex-col gap-5;
 }
 
 .active {
@@ -7,18 +7,21 @@
 }
 
 .columnHeader {
-  @apply flex gap-1;
+  @apply flex gap-3;
+  h2 {
+    @apply text-heading-s uppercase tracking-[2px] mb-[6px]; 
+  }
 }
 
 .columnColorCircle {
-  @apply rounded-full w-4 h-4;
+  @apply rounded-full w-[15px] h-[15px];
 }
 
 .addNewColumn {
   composes: column;
-  @apply justify-center items-center text-heading-xl text-kgray capitalize mt-8 bg-[#ebf1fb] hover:text-primary cursor-pointer;
+  @apply justify-center items-center text-heading-xl text-kgray capitalize mt-10 bg-[#ebf1fb] hover:text-primary cursor-pointer;
 }
 
 :global(.dark) .addNewColumn {
-  @apply bg-[#242530]
+  @apply bg-kgray-dark/25;
 }
