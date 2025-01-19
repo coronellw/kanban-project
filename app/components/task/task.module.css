@@ -1,5 +1,5 @@
 .task {
-  @apply flex flex-col gap-4 rounded-lg bg-white shadow-lg px-4 py-6;
+  @apply flex flex-col gap-2 rounded-lg bg-white shadow-lg px-4 py-[23px];
 }
 
 :global(.dark) .task {
