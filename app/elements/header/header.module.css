@@ -9,7 +9,7 @@
 }
 
 :global(.sidebarClosed) .logo {
-  @apply border-b-line sm:border-b sm:border-solid sm:shadow-sm shadow-line;
+  @apply border-b-line sm:border-b sm:border-solid sm:shadow-sm shadow-line sm:w-[210px] sm:bg-center;
 }
 
 :global(.dark) :global(.sidebarClosed) .logo {

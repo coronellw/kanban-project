@@ -1,10 +1,12 @@
 import { useAtom } from "jotai"
-import styles from "./visibility-toggle.module.css"
+import classNames from "classnames"
 import { isSidebarVisibleAtom } from "~/store"
+
+import styles from "./visibility-toggle.module.css"
 
 // TODO: Rename to sidebar visibility or improve the name to something more specific
 // ALT: you can also make the component more generic to be reusable
-const Visibility = () => {
+const Visibility = ({className}: {className?: string}) => {
   const [isSidebarVisible, setIsSidebarVisible] = useAtom(isSidebarVisibleAtom)
 
   const handleVisibilityChange = () => {
@@ -12,7 +14,7 @@ const Visibility = () => {
   }
 
   return (
-    <div className={styles.visibility} onClick={handleVisibilityChange}>
+    <div className={classNames(styles.visibility, className)} onClick={handleVisibilityChange}>
       <span className={styles["icon-eye-closed"]}></span>
       Hide Sidebar
     </div>
