@@ -7,8 +7,9 @@
   @apply bg-line-dark text-white;
 }
 
-.wrapper:has(.errorMessage) .textField {
-  @apply invalid:outline-secondary invalid:outline-1 invalid:outline;
+/* .wrapper:has(.errorMessage) .textField, */
+.error {
+  @apply outline-secondary outline-1 outline;
 }
 
 .textField::placeholder {

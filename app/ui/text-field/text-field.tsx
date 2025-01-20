@@ -5,7 +5,7 @@ type TextFieldProps = { errorMessage?: string } & React.ComponentPropsWithoutRef
 
 const TextField = ({ className, value, onChange, type = "text", placeholder, errorMessage, ...props }: TextFieldProps) => {
   return (
-    <span className={classNames(styles.wrapper, className)}>
+    <span className={classNames(styles.wrapper, className, {[styles.error]: !!errorMessage})}>
       <input
         type={type}
         value={value}

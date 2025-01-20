@@ -18,6 +18,7 @@ import type { ISubTask, ITask } from "~/types"
 
 import addNewTaskModalStyles from "./add-new-task-modal.module.css"
 import baseStyles from "../base-modal.module.css"
+import { validateForm } from "~/utils"
 
 
 export const AddNewTaskModal = () => {
@@ -25,11 +26,12 @@ export const AddNewTaskModal = () => {
   const columns = useAtomValue(ColumnsAtom)
   const setActiveModal = useSetAtom(activeModalAtom)
   const [selectedTask, setSelectedTask] = useAtom(selectedTaskAtom)
-  const states = useMemo(() =>columns?.map(column => ({ value: column._id, label: capitalize(column.name) })), [columns]) || []
+  const states = useMemo(() => columns?.map(column => ({ value: column._id, label: capitalize(column.name) })), [columns]) || []
   const existingSubtasks = useMemo(() => selectedTask?.subtasks.map(s => `${s._id}`), [selectedTask?.subtasks]) || []
 
   const [selectedStatus, setSelectedStatus] = useState<string | undefined>(selectedTask?.status || states[0]?.value)
   const [subtasks, setSubtasks] = useState<string[]>(existingSubtasks)
+  const [errors, setErrors] = useState<Record<string, string>>({}) 
   const [isNew] = useState<boolean>(!selectedTask?._id)
   const [hasChanges, setHasChanges] = useState<boolean>(isNew)
 
@@ -51,12 +53,25 @@ export const AddNewTaskModal = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (!formRef.current) return
-
     const formData = new FormData(formRef.current)
+
+    const fieldErrors: { [key: string]: string } = {
+      title: 'Title is required',
+      ...Object.fromEntries(subtasks.map(st => [st, "can't be empty"]))
+    }
+
+    const errors = validateForm(formRef.current, fieldErrors)
+    if (errors) {
+      setErrors(errors)
+      console.log(errors)
+      return
+    }
+
     const subt = subtasks.map(subtask => {
       const originalTask: ISubTask = selectedTask?.subtasks.find(st => st._id === subtask) || {} as ISubTask
       return { ...originalTask, name: formData.get(subtask) }
     })
+
     const title = formData.get('title')
     const description = formData.get('description')
 
@@ -91,7 +106,14 @@ export const AddNewTaskModal = () => {
 
       <div>
         <label htmlFor="title">Title</label>
-        <TextField id="title" name="title" required defaultValue={selectedTask?.title} />
+        <TextField
+          id="title"
+          name="title"
+          defaultValue={selectedTask?.title}
+          placeholder="e.g. Take coffee break"
+          errorMessage={errors["title"]}
+          onChange={() => setErrors(current => ({...current, title: ''}))}
+        />
       </div>
 
       <div>
@@ -100,7 +122,8 @@ export const AddNewTaskModal = () => {
           name="description"
           id="description"
           defaultValue={selectedTask?.description}
-          className="min-h-12 max-h-28"
+          className="h-28 resize-none"
+          placeholder="e.g. It’s always good to take a break. This 15 minute break will recharge the batteries a little."
         />
       </div>
 
@@ -112,7 +135,10 @@ export const AddNewTaskModal = () => {
               className="flex-1"
               name={subTask}
               id={subTask}
+              placeholder="e.g. Make coffee"
               defaultValue={selectedTask?.subtasks.find(s => s._id === subTask)?.name}
+              errorMessage={errors[subTask]}
+              onChange={() => setErrors(current => ({...current, [subTask]: ''}))}
             />
             <span className={baseStyles.closeIcon} onClick={() => setSubtasks(current => current.filter(st => st !== subTask))}></span>
           </div>
@@ -153,7 +179,7 @@ export const AddNewTaskModal = () => {
 function hasUpdates(task: ITask, form: HTMLFormElement): boolean {
   const formData = new FormData(form)
 
-  const staticFields = ['title','description','status']
+  const staticFields = ['title', 'description', 'status']
   const formObj = Object.fromEntries(formData)
   const subtaskCount = Object.keys(formObj).filter(k => !staticFields.includes(k))
 
