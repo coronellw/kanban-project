@@ -43,8 +43,8 @@ export const ViewTaskModal = () => {
         <span className="text-heading-l">{task.title}</span>
         <TaskMenu />
       </span>
-      <span className="text-body-l">{task.description}</span>
-      <span className="text-body-m">
+      <span className={styles.description}>{task.description}</span>
+      <span className={styles.subtitle}>
         Subtasks ({task.subtasks?.filter(t => t.completed)?.length} of {task.subtasks?.length})
       </span>
       <span className="flex flex-col gap-2">
@@ -59,7 +59,7 @@ export const ViewTaskModal = () => {
         })}
       </span>
       <div className="flex flex-col gap-2">
-        <span className={styles.label}>Status</span>
+        <span className={styles.label}>Current Status</span>
         <Select
           disabled
           id="status"
