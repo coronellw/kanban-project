@@ -11,8 +11,10 @@ A project based on [frontendmentor](https://www.frontendmentor.io/challenges/kan
 
 
 ## TODO LIST
-[] clean up
-[] compare design to coded version
-[] upload to vercel
-[] test 
-[] publish
+| completed | description |
+| --- | --- |
+| No | clean up|
+| No |  compare design to coded version |
+| No |  upload to vercel |
+| No |  test  |
+| No |  publish |
