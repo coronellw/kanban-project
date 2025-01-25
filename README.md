@@ -8,3 +8,11 @@ A project based on [frontendmentor](https://www.frontendmentor.io/challenges/kan
 * 👻 jotai
 
 * Server API in nodeJS 👔
+
+
+## TODO LIST
+* clean up
+* compare design to coded version
+* upload to vercel
+* test 
+* publish
