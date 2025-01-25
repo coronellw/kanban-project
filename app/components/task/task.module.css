@@ -17,3 +17,7 @@
 :global(.dark) .title {
   @apply text-white;
 }
+
+.taskCount {
+  @apply text-body-m text-kgray;
+}

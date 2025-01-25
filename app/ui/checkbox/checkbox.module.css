@@ -28,11 +28,11 @@ button {
   @apply bg-kgray-darkest hover:bg-primary/25;
 }
 
-.checkboxLabel {
+.checkbox .checkboxLabel {
   @apply text-body-m text-black;
 }
 
-:global(.dark) .checkboxLabel {
+:global(.dark) .checkbox .checkboxLabel {
   @apply text-white;
 }
 

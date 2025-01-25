@@ -33,7 +33,7 @@ const Task = ({ task }: { task: ITask }) => {
       className={styles.task}
     >
       <div className={styles.title}>{task.title}</div>
-      <div className="text-body-m">
+      <div className={styles.taskCount}>
         {task.subtasks?.filter(t => t.completed)?.length} of {task.subtasks?.length} subtasks
       </div>
     </div>
