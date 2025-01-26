@@ -61,9 +61,8 @@ export const AddNewTaskModal = () => {
     }
 
     const errors = validateForm(formRef.current, fieldErrors)
-    if (errors) {
+    if (errors && !!Object.keys(errors).length) {
       setErrors(errors)
-      console.log(errors)
       return
     }
 

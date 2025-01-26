@@ -31,7 +31,7 @@ export const ConfirmBoardDeletion = () => {
         onDeny={closeModal}
       >
         <div className={styles.content}>
-          <span className={styles.title}>Delete this task?</span>
+          <span className={styles.title}>Delete this board?</span>
           <span className={styles.description}>
             Are you sure you want to delete the &apos;{board.name}&apos; board? This action will remove all columns and tasks and cannot be reversed.
           </span>
