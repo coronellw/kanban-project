@@ -18,3 +18,4 @@ A project based on [frontendmentor](https://www.frontendmentor.io/challenges/kan
 | No |  upload to vercel |
 | No |  test  |
 | No |  publish |
+| No | Add testing |
