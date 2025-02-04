@@ -8,6 +8,8 @@ import DottedMenu from "~/ui/dotted-menu"
 import { ModalWindows } from "~/types"
 import { useCallback } from "react"
 import { BoardMenu } from "../pop-over-menus"
+import  AddTaskIcon from "~/assets/icon-add-task-mobile.svg"
+import Title from "~/ui/title"
 
 const Header = ({ className, ...props }: React.ComponentPropsWithoutRef<'header'>) => {
   const board = useAtomValue(selectedBoardAtom)
@@ -29,9 +31,7 @@ const Header = ({ className, ...props }: React.ComponentPropsWithoutRef<'header'
         Kanban
       </h1>
       <div className={styles.details}>
-        <span className={styles["board-name"]}>
-          {board && board.name}
-        </span>
+        <Title title={board?.name || ""} action={handleModal(ModalWindows.Sidebar)} />
         <span className={styles.cta}>
           <Button
             btnSize="large"
@@ -49,10 +49,10 @@ const Header = ({ className, ...props }: React.ComponentPropsWithoutRef<'header'
             disabled={!board || !board.columns?.length}
             onClick={handleNewTask}
           >
-            +
+            <img src={AddTaskIcon} alt="add new task" />
           </Button>
-          <DottedMenu className={styles.mobile} onClick={handleModal(ModalWindows.Sidebar)} />
-          <BoardMenu triggerClassName={styles.desktop} />
+          {/* <DottedMenu className={styles.mobile} onClick={handleModal(ModalWindows.Sidebar)} /> */}
+          <BoardMenu />
         </span>
       </div>
     </header>

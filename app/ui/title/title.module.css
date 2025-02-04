@@ -1,0 +1,10 @@
+.title  {
+    @apply text-heading-l sm:text-heading-xl flex items-center gap-2;
+}
+
+.caret {
+    @apply flex md:hidden w-4 h-2 bg-primary;
+    mask-image: url('../../assets/icon-chevron-down.svg');
+    mask-size: contain;
+    mask-repeat: no-repeat;
+}
