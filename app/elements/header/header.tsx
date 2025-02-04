@@ -4,7 +4,6 @@ import { useAtomValue, useSetAtom } from "jotai"
 
 import { activeModalAtom, selectedBoardAtom, selectedTaskAtom } from "~/store"
 import Button from "~/ui/button"
-import DottedMenu from "~/ui/dotted-menu"
 import { ModalWindows } from "~/types"
 import { useCallback } from "react"
 import { BoardMenu } from "../pop-over-menus"
@@ -51,7 +50,6 @@ const Header = ({ className, ...props }: React.ComponentPropsWithoutRef<'header'
           >
             <img src={AddTaskIcon} alt="add new task" />
           </Button>
-          {/* <DottedMenu className={styles.mobile} onClick={handleModal(ModalWindows.Sidebar)} /> */}
           <BoardMenu />
         </span>
       </div>
