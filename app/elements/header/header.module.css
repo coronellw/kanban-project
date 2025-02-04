@@ -21,14 +21,14 @@
 }
 
 .details {
-  @apply flex justify-between items-center flex-1 pl-6 pr-8 pt-[29px] pb-[37px] self-stretch border-b-line sm:border-b border-solid sm:shadow-sm shadow-line;
+  @apply flex justify-between items-center flex-1 pl-6 md:pr-8 pt-[29px] pb-[37px] self-stretch border-b-line sm:border-b border-solid sm:shadow-sm shadow-line;
 }
 
 :global(.dark) .details {
   @apply border-b-line-dark shadow-line-dark;
 }
 
-.board-name {
+.boardName {
   @apply text-heading-l sm:text-heading-xl;
 }
 
@@ -37,7 +37,7 @@
 }
 
 .mobile {
-  @apply flex md:hidden;
+  @apply flex md:hidden items-center;
 }
 
 .cta {
