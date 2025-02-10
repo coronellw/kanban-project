@@ -13,6 +13,7 @@ A project based on [frontendmentor](https://www.frontendmentor.io/challenges/kan
 ## TODO LIST
 | completed | description |
 | --- | --- |
+| In Progress | deploy to aws |
 | No | clean up|
 | No |  compare design to coded version |
 | No |  upload to vercel |
