@@ -4,3 +4,8 @@
 # React Router
 /.react-router/
 /build/
+
+
+# no env variables
+.env
+.env.local

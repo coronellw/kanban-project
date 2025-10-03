@@ -1,7 +1,4 @@
-import { useAtom } from "jotai"
-import { useEffect } from "react"
-
-import { userAtom } from "~/store"
+import { useAuth } from "~/hooks/useAuth"
 import { getLoggedUser } from "~/authentication/user"
 import DashboardComponent from "~/components/dashboard"
 
@@ -18,14 +15,27 @@ export async function clientLoader() {
 
 export default function Dashboard({ loaderData }: Route.ComponentProps) {
   const { user: userData } = loaderData
-  const [user, setUser] = useAtom(userAtom)
+  const { login } = useAuth()
 
-  useEffect(() => {
-    setUser(userData)
-  }, [userData])
+  // Update the global user state with the loaded data
+  if (userData?._id) {
+    login(userData)
+  }
 
-  if (!user) return
-
+  if (!userData) {
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh',
+        fontSize: '16px',
+        color: 'var(--text-primary, #333)'
+      }}>
+        Loading dashboard...
+      </div>
+    )
+  }
 
   return <DashboardComponent />
 }
