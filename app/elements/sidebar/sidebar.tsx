@@ -23,9 +23,9 @@ const Sidebar = ({ className, ...props }: React.ComponentPropsWithoutRef<'aside'
         <ul>
           {boards.map(b =>
             <li
-              key={b._id}
+              key={b.id}
               className={classNames(styles.board, {
-                [styles['board-selected']]: b._id === currentBoard?._id
+                [styles['board-selected']]: b.id === currentBoard?.id
               })}
               onClick={() => handleBoardSelection(b)}
             >

@@ -18,7 +18,7 @@ export const ConfirmBoardDeletion = () => {
   const closeModal = () => setModal(0)
 
   const handleDelete = () => {
-    deleteBoard(board._id)
+    deleteBoard(board.id)
     closeModal()
   }
 

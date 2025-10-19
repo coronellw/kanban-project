@@ -1,7 +1,7 @@
 import type { ITask } from "./task"
 
 export interface IBoard {
-  _id: string
+  id: string
   name: string
   columns: Array<IColumn>
   owner?: string
@@ -10,7 +10,7 @@ export interface IBoard {
 
 export interface IColumn {
   name: string
-  _id: string
+  id: string
   color?:string
   tasks: Array<ITask>
   board: string

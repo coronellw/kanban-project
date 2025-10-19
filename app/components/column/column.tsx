@@ -12,10 +12,12 @@ const colors = [
 ]
 
 const Column = ({ column, index }: { column: IColumn, index: number }) => {
-  const { setNodeRef: dropRef, isOver } = useDroppable({ id: column._id })
+  const { setNodeRef: dropRef, isOver } = useDroppable({ id: column.id })
   const style = { backgroundColor: column.color || colors[index % colors.length] }
   
-  if (!column.name || !column.tasks) return
+  if(!column.tasks) {
+    column.tasks = []
+  }
 
   return (
     <>
@@ -26,9 +28,9 @@ const Column = ({ column, index }: { column: IColumn, index: number }) => {
       >
         <span className={styles.columnHeader}>
           <span className={styles.columnColorCircle} style={style}></span>
-          <h2>{column.name} ({column.tasks.length})</h2>
+          <h2>{column.name} ({column.tasks?.length || 0})</h2>
         </span>
-        {column.tasks.map(task => <Task key={task._id} task={task} />)}
+        {column.tasks.map(task => <Task key={task.id} task={task} />)}
       </div>
     </>
   )

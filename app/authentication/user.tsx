@@ -58,7 +58,7 @@ export const getLoggedUser = async (): Promise<IUser | undefined> => {
 
     const response: AxiosResponse<IUser> = await kanbanApi.get('/users/me')
 
-    if (response.status === 200 && response.data?._id) {
+    if (response.status === 200 && response.data?.id) {
       return response.data
     }
 

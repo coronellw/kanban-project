@@ -26,13 +26,13 @@ export const AddNewTaskModal = () => {
   const columns = useAtomValue(ColumnsAtom)
   const setActiveModal = useSetAtom(activeModalAtom)
   const [selectedTask, setSelectedTask] = useAtom(selectedTaskAtom)
-  const states = useMemo(() => columns?.map(column => ({ value: column._id, label: capitalize(column.name) })), [columns]) || []
-  const existingSubtasks = useMemo(() => selectedTask?.subtasks.map(s => `${s._id}`), [selectedTask?.subtasks]) || []
+  const states = useMemo(() => columns?.map(column => ({ value: column.id, label: capitalize(column.name) })), [columns]) || []
+  const existingSubtasks = useMemo(() => selectedTask?.subtasks.map(s => `${s.id}`), [selectedTask?.subtasks]) || []
 
   const [selectedStatus, setSelectedStatus] = useState<string | undefined>(selectedTask?.status || states[0]?.value)
   const [subtasks, setSubtasks] = useState<string[]>(existingSubtasks)
   const [errors, setErrors] = useState<Record<string, string>>({}) 
-  const [isNew] = useState<boolean>(!selectedTask?._id)
+  const [isNew] = useState<boolean>(!selectedTask?.id)
   const [hasChanges, setHasChanges] = useState<boolean>(isNew)
 
   const { addTask, updateTask } = useBoard()
@@ -67,7 +67,7 @@ export const AddNewTaskModal = () => {
     }
 
     const subt = subtasks.map(subtask => {
-      const originalTask: ISubTask = selectedTask?.subtasks.find(st => st._id === subtask) || {} as ISubTask
+      const originalTask: ISubTask = selectedTask?.subtasks.find(st => st.id === subtask) || {} as ISubTask
       return { ...originalTask, name: formData.get(subtask) }
     })
 
@@ -76,8 +76,8 @@ export const AddNewTaskModal = () => {
 
     try {
       let response: AxiosResponse<ITask>
-      if (!!selectedTask?._id) {
-        response = await kanbanApi.patch(`/tasks/${selectedTask._id}`, { title, description, subtasks: subt, status: selectedStatus })
+      if (!!selectedTask?.id) {
+        response = await kanbanApi.patch(`/tasks/${selectedTask.id}`, { title, description, subtasks: subt, status: selectedStatus })
       } else {
         response = await kanbanApi.post("/tasks", { title, description, subtasks: subt, status: selectedStatus })
       }
@@ -135,7 +135,7 @@ export const AddNewTaskModal = () => {
               name={subTask}
               id={subTask}
               placeholder="e.g. Make coffee"
-              defaultValue={selectedTask?.subtasks.find(s => s._id === subTask)?.name}
+              defaultValue={selectedTask?.subtasks.find(s => s.id === subTask)?.name}
               errorMessage={errors[subTask]}
               onChange={() => setErrors(current => ({...current, [subTask]: ''}))}
             />
@@ -186,7 +186,7 @@ function hasUpdates(task: ITask, form: HTMLFormElement): boolean {
     || formData.get('description') !== task.description
     || formData.get('status') !== task.status
     || task.subtasks.length !== subtaskCount.length
-    || task.subtasks.some(st => formData.get(st._id as string) !== st.name)
+    || task.subtasks.some(st => formData.get(st.id as string) !== st.name)
 }
 
 export default AddNewTaskModal

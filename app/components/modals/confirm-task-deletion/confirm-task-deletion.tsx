@@ -16,7 +16,7 @@ export const ConfirmTaskDeletionModal = () => {
   }
 
   const handleDelete = () => {
-    deleteTask(task._id)
+    deleteTask(task.id)
     setModal(0)
   }
 

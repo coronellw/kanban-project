@@ -1,11 +1,11 @@
 export interface ISubTask {
-  _id?: string
+  id?: string
   name: string
   completed: boolean
 }
 
 export interface ITask {
-  _id: string
+  id: string
   title: string
   description: string
   subtasks: ISubTask[]

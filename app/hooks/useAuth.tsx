@@ -20,7 +20,7 @@ export const useAuth = (): UseAuthReturn => {
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
 
-  const isAuthenticated = Boolean(user?._id)
+  const isAuthenticated = Boolean(user?.id)
 
   const loginUser = useCallback((userData: IUser) => {
     setUser(userData)
@@ -42,7 +42,7 @@ export const useAuth = (): UseAuthReturn => {
       setIsLoading(true)
       const loggedUser = await getLoggedUser()
       
-      if (loggedUser?._id) {
+      if (loggedUser?.id) {
         setUser(loggedUser)
         return true
       }
@@ -61,7 +61,7 @@ export const useAuth = (): UseAuthReturn => {
   }, [setUser, navigate])
 
   return {
-    user: user?._id ? user : null,
+    user: user?.id ? user : null,
     isLoading,
     isAuthenticated,
     login: loginUser,

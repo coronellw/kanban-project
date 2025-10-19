@@ -10,7 +10,7 @@ import type { Route } from "./+types/dashboard"
 export async function clientLoader() {
   try {
     const user = await getLoggedUser()
-    if (!user?._id) {
+    if (!user?.id) {
       return redirect("/")
     }
     return { user }
@@ -29,7 +29,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
 
   // Update the global user state with the loaded data
   useEffect(() => {
-    if (userData?._id) {
+    if (userData?.id) {
       login(userData)
     }
   }, [userData, login])

@@ -15,7 +15,7 @@ export async function clientLoader() {
   // Check if user is already logged in
   try {
     const user = await getLoggedUser()
-    if (user?._id) {
+    if (user?.id) {
       return redirect("/home")
     }
   } catch (error) {
@@ -33,21 +33,21 @@ export async function clientAction({ request }: Route.ActionArgs) {
 
   // Input validation
   if (!email || !password) {
-    return { 
+    return {
       error: 'Email and password are required',
       email: email || '',
     }
   }
 
   if (!email.includes('@')) {
-    return { 
+    return {
       error: 'Please enter a valid email address',
       email,
     }
   }
 
   if (password.length < 6) {
-    return { 
+    return {
       error: 'Password must be at least 6 characters long',
       email,
     }
@@ -56,19 +56,17 @@ export async function clientAction({ request }: Route.ActionArgs) {
   try {
     const user = await login(email, password)
 
-    console.log({user, email, password})
-
-    if (user?._id) {
+    if (user?.id) {
       return redirect("/home")
     }
-    
-    return { 
+
+    return {
       error: 'Invalid email or password. Please try again.',
       email,
     }
   } catch (error) {
     console.error('Login error:', error)
-    return { 
+    return {
       error: 'Login failed. Please check your connection and try again.',
       email,
     }
@@ -86,7 +84,7 @@ export default function Home() {
   const errorData = isErrorResponse(actionData) ? actionData : null
 
   return (
-    <Login 
+    <Login
       error={errorData?.error}
       defaultEmail={errorData?.email}
     />

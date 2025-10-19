@@ -17,7 +17,7 @@ export const ViewTaskModal = () => {
   const task = useAtomValue(selectedTaskAtom)
   const columns = useAtomValue(ColumnsAtom)
   const setModal = useSetAtom(activeModalAtom)
-  const [states] = useState(columns?.map(c => ({ value: c._id, label: capitalize(c.name) })))
+  const [states] = useState(columns?.map(c => ({ value: c.id, label: capitalize(c.name) })))
   const { toggleSubTaskCompletion } = useBoard()
 
   if (!task) {
@@ -50,11 +50,11 @@ export const ViewTaskModal = () => {
       <span className="flex flex-col gap-2">
         {task.subtasks.map(subtask => {
           return <Checkbox
-            id={subtask._id}
-            name={subtask._id}
-            key={subtask._id}
+            id={subtask.id}
+            name={subtask.id}
+            key={subtask.id}
             defaultChecked={subtask.completed}
-            handleChange={() => toggleSubTask(subtask._id as string)}
+            handleChange={() => toggleSubTask(subtask.id as string)}
           >{subtask.name}</Checkbox>
         })}
       </span>

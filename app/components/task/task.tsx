@@ -10,7 +10,7 @@ const Task = ({ task }: { task: ITask }) => {
   const setSelectedTask = useSetAtom(selectedTaskAtom)
   const setModal = useSetAtom(activeModalAtom)
   const { attributes, listeners, transform, setNodeRef: dragRef } = useDraggable({
-    id: task._id,
+    id: task.id,
     data: task
   })
 

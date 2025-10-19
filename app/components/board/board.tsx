@@ -21,7 +21,7 @@ const Board = () => {
   const sensors = useSensors(mouseSensor, touchSensor)
   const { moveTask } = useBoard()
 
-  if (!selectedBoard._id) {
+  if (!selectedBoard.id) {
     return <NoBoard />
   }
 
@@ -32,7 +32,7 @@ const Board = () => {
   return (
     <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
       <div className={styles.board}>
-        {columns.map((col, index) => <Column key={col._id} column={col} index={index} />)}
+        {columns.map((col, index) => <Column key={col.id || col.id} column={col} index={index} />)}
         <AddNewColumn />
       </div>
     </DndContext>

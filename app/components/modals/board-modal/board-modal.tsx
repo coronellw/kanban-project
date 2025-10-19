@@ -17,7 +17,7 @@ export const BoardModal = ({ isNew = false }: { isNew?: boolean }) => {
   const selectedBoard = useAtomValue(selectedBoardAtom)
   const setModal = useSetAtom(activeModalAtom)
   const formRef = useRef<HTMLFormElement>(null)
-  const initialColumns = useMemo(() => selectedBoard?.columns.map(c => c._id) || [], [selectedBoard])
+  const initialColumns = useMemo(() => selectedBoard?.columns.map(c => c.id) || [], [selectedBoard])
   const [columns, setColumns] = useState<string[]>(isNew ? [] : initialColumns)
   const [hasChanges, setHasChanges] = useState<boolean>(isNew)
   const { addBoard, updateBoard, findColumn, deleteColumn } = useBoard()
@@ -40,15 +40,15 @@ export const BoardModal = ({ isNew = false }: { isNew?: boolean }) => {
         await addBoard(name, columnsNames)
       } else {
         const modifiedColumns = selectedBoard.columns
-          .filter(col => col.name !== formData.get(col._id))
-          .map(col => ({ ...col, name: formData.get(col._id) as string }))
+          .filter(col => col.name !== formData.get(col.id))
+          .map(col => ({ ...col, name: formData.get(col.id) as string }))
 
-        const existingColumnsIds = selectedBoard.columns.map(col => col._id)
+        const existingColumnsIds = selectedBoard.columns.map(col => col.id)
         const newColumns = columns
           .filter(col => !existingColumnsIds.includes(col))
           .map(col => ({ name: formData.get(col) as string }))
 
-        await updateBoard({ _id: selectedBoard._id, name }, [...modifiedColumns, ...newColumns])
+        await updateBoard({ id: selectedBoard.id, name }, [...modifiedColumns, ...newColumns])
       }
       setModal(0)
     } catch (error) {
@@ -108,11 +108,11 @@ export const BoardModal = ({ isNew = false }: { isNew?: boolean }) => {
 
 function hasUpdates(board: IBoard, form: HTMLFormElement): boolean {
   const formData = new FormData(form)
-  const existingColumns = board.columns.map(c => c._id)
+  const existingColumns = board.columns.map(c => c.id)
   existingColumns.push('name')
   const hasNewColumns = !!Array.from(formData.keys()).filter(k => !existingColumns.includes(k))
 
-  return board.name !== formData.get('name') || hasNewColumns || board.columns.some(col => col.name !== formData.get(col._id))
+  return board.name !== formData.get('name') || hasNewColumns || board.columns.some(col => col.name !== formData.get(col.id))
 }
 
 export default BoardModal
