@@ -12,7 +12,7 @@ import { activeModalAtom, ColumnsAtom, selectedTaskAtom } from "~/store"
 import { capitalize } from "~/utils/capitalize"
 import { kanbanApi } from "~/api"
 
-import { useBoard } from "~/hooks/useBoard"
+import useBoard from "~/hooks/useBoard"
 
 import type { ISubTask, ITask } from "~/types"
 

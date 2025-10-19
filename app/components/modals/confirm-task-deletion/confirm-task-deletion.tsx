@@ -1,6 +1,6 @@
 import { useAtomValue, useSetAtom } from "jotai"
 import classNames from "classnames"
-import { useBoard } from "~/hooks/useBoard"
+import useBoard from "~/hooks/useBoard"
 import ConfirmBox from "~/components/confirm-box"
 import { activeModalAtom, selectedTaskAtom } from "~/store"
 

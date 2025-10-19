@@ -35,8 +35,8 @@ const Sidebar = ({ className, ...props }: React.ComponentPropsWithoutRef<'aside'
               </span>
             </li>
           )}
-          <li className={classNames(styles.board, "text-primary")} onClick={() => setModal(ModalWindows.AddNewBoard)}>
-            <span className={styles.icon}></span>
+          <li key='cta-create-new-board' className={classNames(styles.board, "text-primary")} onClick={() => setModal(ModalWindows.AddNewBoard)}>
+            <span key='cta-create-new-board-icon' className={styles.icon}></span>
             <span>
               + Create New Board
             </span>

@@ -1,11 +1,8 @@
-import { redirect, useNavigate, useActionData } from "react-router"
+import { redirect, useActionData } from "react-router"
 import { login, getLoggedUser } from "~/authentication/user"
 import Login from "~/elements/login"
-import { useAtom } from "jotai"
-import { userAtom } from "~/store"
 
 import type { Route } from "./+types/home"
-import { useEffect, useState } from "react"
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -59,6 +56,8 @@ export async function clientAction({ request }: Route.ActionArgs) {
   try {
     const user = await login(email, password)
 
+    console.log({user, email, password})
+
     if (user?._id) {
       return redirect("/home")
     }
@@ -77,52 +76,7 @@ export async function clientAction({ request }: Route.ActionArgs) {
 }
 
 export default function Home() {
-  const [user, setUser] = useAtom(userAtom)
-  const navigate = useNavigate()
   const actionData = useActionData<typeof clientAction>()
-  const [isCheckingAuth, setIsCheckingAuth] = useState(true)
-
-  useEffect(() => {
-    // Check for existing user session
-    const checkUserSession = async () => {
-      try {
-        if (user?._id) {
-          navigate("/home", { replace: true })
-          return
-        }
-
-        // Try to get user from stored session
-        const loggedUser = await getLoggedUser()
-        if (loggedUser?._id) {
-          setUser(loggedUser)
-          navigate("/home", { replace: true })
-        }
-      } catch (error) {
-        // No valid session, stay on login page
-        console.log("No valid session found")
-      } finally {
-        setIsCheckingAuth(false)
-      }
-    }
-
-    checkUserSession()
-  }, [user, setUser, navigate])
-
-  // Show loading state while checking authentication
-  if (isCheckingAuth) {
-    return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '100vh',
-        fontSize: '16px',
-        color: 'var(--text-primary, #333)'
-      }}>
-        Checking authentication...
-      </div>
-    )
-  }
 
   // Type guard for action data
   const isErrorResponse = (data: any): data is { error: string; email?: string } => {

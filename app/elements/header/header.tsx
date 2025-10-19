@@ -15,14 +15,14 @@ const Header = ({ className, ...props }: React.ComponentPropsWithoutRef<'header'
   const setSelectedTask = useSetAtom(selectedTaskAtom)
   const setOpenModal = useSetAtom(activeModalAtom)
 
-  const handleModal = (modal: ModalWindows) => useCallback(() => {
+  const handleModal = useCallback((modal: ModalWindows) => {
     setOpenModal(modal)
-  }, [modal])
+  }, [setOpenModal])
 
-  const handleNewTask = () => {
+  const handleNewTask = useCallback(() => {
     setSelectedTask(undefined)
     setOpenModal(ModalWindows.AddNewTask)
-  }
+  }, [setSelectedTask, setOpenModal])
 
   return (
     <header className={classNames(styles.header, className)} {...props}>
@@ -30,7 +30,7 @@ const Header = ({ className, ...props }: React.ComponentPropsWithoutRef<'header'
         Kanban
       </h1>
       <div className={styles.details}>
-        <Title title={board?.name || ""} action={handleModal(ModalWindows.Sidebar)} />
+        <Title title={board?.name || ""} action={() => handleModal(ModalWindows.Sidebar)} />
         <span className={styles.cta}>
           <Button
             btnSize="large"

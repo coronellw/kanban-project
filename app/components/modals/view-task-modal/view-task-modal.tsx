@@ -3,7 +3,7 @@ import { useAtomValue, useSetAtom } from "jotai"
 
 import { activeModalAtom, ColumnsAtom, selectedTaskAtom } from "~/store"
 import { capitalize } from "~/utils"
-import { useBoard } from "~/hooks/useBoard"
+import useBoard from "~/hooks/useBoard"
 
 import Button from "~/ui/button"
 import Select from "~/ui/select"

@@ -1,4 +1,6 @@
-import { useAuth } from "~/hooks/useAuth"
+import { useEffect } from "react"
+import { redirect } from "react-router"
+import useAuth from "~/hooks/useAuth"
 import { getLoggedUser } from "~/authentication/user"
 import DashboardComponent from "~/components/dashboard"
 
@@ -6,35 +8,34 @@ import type { Route } from "./+types/dashboard"
 
 
 export async function clientLoader() {
-  const user = await getLoggedUser()
-  if (!user) {
-    throw new Response("No user logged in", { status: 401 })
+  try {
+    const user = await getLoggedUser()
+    if (!user?._id) {
+      return redirect("/")
+    }
+    return { user }
+  } catch (error) {
+    // No valid session, redirect to login
+    console.log("No valid session, redirecting to login")
+    return redirect("/")
   }
-  return { user }
 }
 
 export default function Dashboard({ loaderData }: Route.ComponentProps) {
-  const { user: userData } = loaderData
   const { login } = useAuth()
 
+  // loaderData will only be an object with user if not redirected
+  const userData = loaderData && 'user' in loaderData ? loaderData.user : null
+
   // Update the global user state with the loaded data
-  if (userData?._id) {
-    login(userData)
-  }
+  useEffect(() => {
+    if (userData?._id) {
+      login(userData)
+    }
+  }, [userData, login])
 
   if (!userData) {
-    return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '100vh',
-        fontSize: '16px',
-        color: 'var(--text-primary, #333)'
-      }}>
-        Loading dashboard...
-      </div>
-    )
+    return null
   }
 
   return <DashboardComponent />

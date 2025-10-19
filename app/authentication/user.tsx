@@ -17,7 +17,7 @@ const recoverSession = async (): Promise<boolean> => {
 export const login = async (email: string, password: string): Promise<IUser | null> => {
   try {
     const response: AxiosResponse<{ user: IUser, token: string }> = await kanbanApi.post("/users/login", { email, password })
-    
+
     if (response.status === 200 && response.data.user && response.data.token) {
       const authHeader = `Bearer ${response.data.token}`
       kanbanApi.defaults.headers.common['Authorization'] = authHeader
@@ -34,11 +34,11 @@ export const login = async (email: string, password: string): Promise<IUser | nu
 export const logout = async (): Promise<boolean> => {
   try {
     const response = await kanbanApi.delete('/users/logout')
-    
+
     // Clear local storage and headers regardless of response
     localStorage.removeItem('K-TOKEN')
     delete kanbanApi.defaults.headers.common['Authorization']
-    
+
     return response.status === 200
   } catch (error) {
     // Clear local storage even if API call fails
@@ -57,11 +57,11 @@ export const getLoggedUser = async (): Promise<IUser | undefined> => {
     }
 
     const response: AxiosResponse<IUser> = await kanbanApi.get('/users/me')
-    
+
     if (response.status === 200 && response.data?._id) {
       return response.data
     }
-    
+
     throw new Error("Invalid user data received")
   } catch (error) {
     // Clear invalid session

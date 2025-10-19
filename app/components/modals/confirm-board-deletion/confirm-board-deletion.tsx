@@ -1,7 +1,7 @@
 import { useAtomValue, useSetAtom } from "jotai"
 import ConfirmBox from "~/components/confirm-box"
 import { activeModalAtom, selectedBoardAtom } from "~/store"
-import { useBoard } from "~/hooks/useBoard"
+import useBoard from "~/hooks/useBoard"
 
 import styles from "./confirm-board-deletion.module.css"
 import baseStyles from "../base-modal.module.css"

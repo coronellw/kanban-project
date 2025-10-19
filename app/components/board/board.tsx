@@ -3,7 +3,7 @@ import { useAtomValue } from "jotai"
 import { ColumnsAtom, selectedBoardAtom } from "~/store"
 import { kanbanApi } from "~/api"
 
-import { useBoard } from "~/hooks/useBoard"
+import useBoard from "~/hooks/useBoard"
 import EmptyBoard from "./empty-board"
 import NoBoard from "./no-board"
 import Column from "~/components/column"

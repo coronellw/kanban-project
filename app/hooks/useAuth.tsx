@@ -17,7 +17,7 @@ export interface UseAuthReturn {
 
 export const useAuth = (): UseAuthReturn => {
   const [user, setUser] = useAtom(userAtom)
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
 
   const isAuthenticated = Boolean(user?._id)
@@ -48,24 +48,17 @@ export const useAuth = (): UseAuthReturn => {
       }
       
       setUser({} as IUser)
+      navigate("/", { replace: true })
       return false
     } catch (error) {
-      console.log("No valid session found")
+      console.log("No valid session found, redirecting to login")
       setUser({} as IUser)
+      navigate("/", { replace: true })
       return false
     } finally {
       setIsLoading(false)
     }
-  }, [setUser])
-
-  // Check authentication on mount
-  useEffect(() => {
-    if (!user?._id) {
-      checkAuth()
-    } else {
-      setIsLoading(false)
-    }
-  }, []) // Only run on mount
+  }, [setUser, navigate])
 
   return {
     user: user?._id ? user : null,
@@ -76,3 +69,5 @@ export const useAuth = (): UseAuthReturn => {
     checkAuth,
   }
 }
+
+export default useAuth

@@ -5,7 +5,7 @@ import { v4 } from "uuid"
 
 import Button from "~/ui/button"
 import TextField from "~/ui/text-field"
-import { useBoard } from "~/hooks/useBoard"
+import useBoard from "~/hooks/useBoard"
 
 import type { IBoard } from "~/types"
 

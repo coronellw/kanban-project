@@ -2,7 +2,7 @@ import TextField from "~/ui/text-field"
 
 import baseStyles from "../base-modal.module.css"
 import { useMemo, useState } from "react"
-import { useBoard } from "~/hooks/useBoard"
+import useBoard from "~/hooks/useBoard"
 import {CheckIcon, Cross1Icon} from "@radix-ui/react-icons"
 
 type ColumnFieldProps = {

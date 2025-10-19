@@ -38,6 +38,10 @@ export const useBoard = (board?: IBoard) => {
   }
 
   const addColumn = async (columnName: string, board: ID) => {
+    if (!board) {
+      console.log(board)
+      throw new Error('Invalid Board provided')
+    }
     const response: AxiosResponse<IColumn> = await kanbanApi.post("/columns", { name: columnName, board })
     currentBoard.columns.push({ ...response.data, tasks: [] })
     saveBoard()
@@ -181,3 +185,5 @@ export const useBoard = (board?: IBoard) => {
     updateBoard
   }
 }
+
+export default useBoard

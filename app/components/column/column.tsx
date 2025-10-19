@@ -14,6 +14,9 @@ const colors = [
 const Column = ({ column, index }: { column: IColumn, index: number }) => {
   const { setNodeRef: dropRef, isOver } = useDroppable({ id: column._id })
   const style = { backgroundColor: column.color || colors[index % colors.length] }
+  
+  if (!column.name || !column.tasks) return
+
   return (
     <>
 
