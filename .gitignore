@@ -9,3 +9,4 @@
 # no env variables
 .env
 .env.local
+.env.*

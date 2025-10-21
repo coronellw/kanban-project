@@ -1,188 +1,93 @@
-import type { AxiosResponse } from "axios"
-import { useAtom, useSetAtom } from "jotai"
-import { kanbanApi } from "~/api"
-import { boardsAtom, selectedBoardAtom } from "~/store"
-import type { IBoard, IColumn, ITask } from "~/types"
+import { useAtom } from "jotai"
+import { useCallback, useMemo } from "react"
+import { selectedBoardAtom } from "~/store"
+import type { IBoard } from "~/types"
+import { useBoardColumns } from "./useBoardColumns"
+import { useColumnAPI } from "./useColumnAPI"
+import { useBoardTasks } from "./useBoardTasks"
+import { useTaskAPI } from "./useTaskAPI"
+import { useBoardAPI } from "./useBoardAPI"
 
-type ID = number | string
-
+/**
+ * Main hook that orchestrates all board-related operations
+ * by composing smaller, focused hooks
+ */
 export const useBoard = (board?: IBoard) => {
-  const reloadBoards = useSetAtom(boardsAtom)
   const [selectedBoard, setSelectedBoard] = useAtom(selectedBoardAtom)
-  let currentBoard = board || selectedBoard || { id: '', name: '', columns: [], version: 0 }
+  
+  // Memoize current board to prevent unnecessary recalculations
+  const currentBoard = useMemo(
+    () => board || selectedBoard || { id: '', name: '', columns: [], version: 0 },
+    [board, selectedBoard]
+  )
 
-  const saveBoard = () => setSelectedBoard({ ...currentBoard, version: currentBoard.version ? currentBoard.version + 1 : 0 })
+  // Memoize saveBoard to prevent recreating on every render
+  const saveBoard = useCallback(() => {
+    setSelectedBoard({ 
+      ...currentBoard, 
+      version: (currentBoard.version ?? 0) + 1 
+    })
+  }, [currentBoard, setSelectedBoard])
 
-  // Helper function to find column index and throw error if not found
-  const findColumnIndexOrThrow = (columnId: ID) => {
-    const index = currentBoard.columns.findIndex(c => c.id === columnId)
-    if (index === -1) throw new Error(`Column with ID ${columnId} not found`)
-    return index
-  }
+  // Column helpers
+  const columnHelpers = useBoardColumns(currentBoard)
 
-  // Helper function to find task index and throw error if not found
-  const findTaskIndexOrThrow = (taskId: ID) => {
-    const column = getColumnFromTaskIdOrError(taskId)
-    const taskIndex = column.tasks.findIndex(t => taskId === t.id)
-    if (taskIndex === -1) throw new Error(`Task with ID ${taskId} not found`)
-    return { column, taskIndex }
-  }
+  // Column API operations
+  const columnAPI = useColumnAPI(
+    currentBoard, 
+    columnHelpers.findColumnIndex, 
+    saveBoard
+  )
 
-  // COLUMNS
-  const findColumn = (columnId: ID) => currentBoard.columns.find(c => c.id === columnId)
-  const getColumnFromTaskId = (taskId: ID) => currentBoard.columns.find(col => col.tasks.some(task => task.id === taskId))
-  const getColumnFromTaskIdOrError = (taskId: ID) => {
-    const column = getColumnFromTaskId(taskId)
-    if (!column) throw new Error(`Task with ID ${taskId} not found`)
-    return column
-  }
+  // Task helpers
+  const taskHelpers = useBoardTasks(columnHelpers.getColumnFromTaskIdOrError)
 
-  const addColumn = async (columnName: string, board: ID) => {
-    if (!board) {
-      console.log(board)
-      throw new Error('Invalid Board provided')
-    }
-    const response: AxiosResponse<IColumn> = await kanbanApi.post("/columns", { name: columnName, board })
-    currentBoard.columns.push({ ...response.data, tasks: [] })
-    saveBoard()
-    return response.data
-  }
+  // Task API operations
+  const taskAPI = useTaskAPI(
+    currentBoard,
+    columnHelpers.findColumnIndex,
+    taskHelpers.findTaskIndex,
+    saveBoard
+  )
 
-  const updateColumn = async (column: Omit<IColumn, "tasks">) => {
-    await kanbanApi.patch(
-      `/columns/${column.id}`, 
-      { ...column, 
-        id: undefined,
-        __v: undefined, 
-        tasks: undefined 
-      }
-    )
-    const columnIndex = findColumnIndexOrThrow(column.id)
-    currentBoard.columns[columnIndex] = {...column, tasks: currentBoard.columns[columnIndex].tasks}
-    saveBoard()
-    return column
-  }
+  // Board API operations
+  const boardAPI = useBoardAPI(
+    currentBoard,
+    setSelectedBoard,
+    columnAPI.addColumn,
+    columnAPI.updateColumn
+  )
 
-  const deleteColumn = async (columnId: ID) => {
-    const response: AxiosResponse<IColumn> = await kanbanApi.delete(`/columns/${columnId}`)
-    currentBoard.columns = currentBoard.columns.filter(column => column.id !== columnId)
-    saveBoard()
-    return response.status === 202 ? response.data : null
-  }
-
-  // TASKS
-  const findTask = (taskId: ID) => {
-    const { column, taskIndex } = findTaskIndexOrThrow(taskId)
-    return column.tasks[taskIndex]
-  }
-
-  const updateTask = (task: ITask) => {
-    const { column } = findTaskIndexOrThrow(task.id)
-    const originColumnIndex = findColumnIndexOrThrow(column.id)
-    if (task.status !== column.id) {
-      const destinationColumnIndex = findColumnIndexOrThrow(task.status as string)
-      currentBoard.columns[originColumnIndex].tasks = currentBoard.columns[originColumnIndex].tasks.filter(t => t.id !== task.id)
-      currentBoard.columns[destinationColumnIndex].tasks.push(task)
-    } else {
-      currentBoard.columns[originColumnIndex].tasks = currentBoard.columns[originColumnIndex].tasks.map(t => t.id !== task.id ? t : task)
-    }
-    saveBoard()
-  }
-
-  const moveTask = (taskId: ID, destinationColumn: ID) => {
-    const { column, taskIndex } = findTaskIndexOrThrow(taskId)
-    const originColumnIndex = findColumnIndexOrThrow(column.id)
-    const destinationColumnIndex = findColumnIndexOrThrow(destinationColumn)
-    const task = currentBoard.columns[originColumnIndex].tasks[taskIndex]
-    if (task.status === destinationColumn) return
-    task.status = destinationColumn as string
-    currentBoard.columns[originColumnIndex].tasks = currentBoard.columns[originColumnIndex].tasks.filter(t => t.id !== taskId)
-    currentBoard.columns[destinationColumnIndex].tasks.push(task)
-    saveBoard()
-  }
-
-  const addTask = (task: ITask) => {
-    const columnIndex = findColumnIndexOrThrow(task.status as string)
-    currentBoard.columns[columnIndex].tasks.push(task)
-    saveBoard()
-  }
-
-  const deleteTask = async (taskId: ID) => {
-    await kanbanApi.delete(`/tasks/${taskId}`)
-    const { taskIndex, column } = findTaskIndexOrThrow(taskId)
-    const columnIndex = findColumnIndexOrThrow(column.id)
-    currentBoard.columns[columnIndex].tasks.splice(taskIndex, 1)
-    saveBoard()
-  }
-
-  const toggleSubTaskCompletion = async (task: ITask, subtaskId: ID) => {
-    await kanbanApi.patch(`/tasks/${task.id}/subtask/toggle`, { subtaskId })
-    const columnIndex = findColumnIndexOrThrow(task.status as string)
-    const { taskIndex } = findTaskIndexOrThrow(task.id)
-    const taskToUpdate = currentBoard.columns[columnIndex].tasks[taskIndex]
-    taskToUpdate.subtasks = taskToUpdate.subtasks.map(st => st.id === subtaskId ? { ...st, completed: !st.completed } : st)
-    saveBoard()
-  }
-
-  // BOARDS
-  const addBoard = async (boardName: string, columns: string[] = []) => {
-    const response: AxiosResponse<IBoard> = await kanbanApi.post("/boards", { name: boardName })
-    const board = response.data
-    await Promise.all(columns.map(col => addColumn(col, board.id)))
-    reloadBoards()
-  }
-
-  const deleteBoard = async (boardId: ID) => {
-    const response: AxiosResponse<IBoard> = await kanbanApi.delete(`/boards/${boardId}`)
-    setSelectedBoard({ columns: [] as IColumn[] } as IBoard)
-    if (response.status === 200) reloadBoards()
-  }
-
-  const updateBoard = async (board: Pick<IBoard, "name" | "owner" | "id">, columns: { id?: string, name: string }[]) => {
-    try {
-      let response;
-      if (board.name !== currentBoard.name) {
-        response = await kanbanApi.patch(`/boards/${board.id}`, { name: board.name });
-      }
-
-      if (!response || response.status === 202) {
-        const columnPromises = columns.map(column => {
-          const columnIndex = column.id ? findColumnIndexOrThrow(column.id) : -1
-          return columnIndex >= 0
-            ? updateColumn({ ...currentBoard.columns[columnIndex], name: column.name })
-            : addColumn(column.name, board.id)
-        });
-
-        await Promise.allSettled(columnPromises)
-      }
-
-      await reloadBoards()
-      return currentBoard
-    } catch (error) {
-      console.error("Failed to update board:", error)
-      throw error;
-    }
-  }
-
-  return {
+  // Return memoized API to prevent unnecessary re-renders
+  return useMemo(() => ({
     board: currentBoard,
-    findColumn,
-    findColumnIndex: findColumnIndexOrThrow,
-    getColumnFromTaskId,
-    addColumn,
-    updateColumn,
-    deleteColumn,
-    findTask,
-    findTaskIndex: findTaskIndexOrThrow,
-    updateTask,
-    deleteTask,
-    moveTask,
-    addTask,
-    toggleSubTaskCompletion,
-    addBoard,
-    deleteBoard,
-    updateBoard
-  }
+    // Column operations
+    findColumn: columnHelpers.findColumn,
+    findColumnIndex: columnHelpers.findColumnIndex,
+    getColumnFromTaskId: columnHelpers.getColumnFromTaskId,
+    addColumn: columnAPI.addColumn,
+    updateColumn: columnAPI.updateColumn,
+    deleteColumn: columnAPI.deleteColumn,
+    // Task operations
+    findTask: taskHelpers.findTask,
+    findTaskIndex: taskHelpers.findTaskIndex,
+    updateTask: taskAPI.updateTask,
+    deleteTask: taskAPI.deleteTask,
+    moveTask: taskAPI.moveTask,
+    addTask: taskAPI.addTask,
+    toggleSubTaskCompletion: taskAPI.toggleSubTaskCompletion,
+    // Board operations
+    addBoard: boardAPI.addBoard,
+    deleteBoard: boardAPI.deleteBoard,
+    updateBoard: boardAPI.updateBoard,
+  }), [
+    currentBoard,
+    columnHelpers,
+    columnAPI,
+    taskHelpers,
+    taskAPI,
+    boardAPI,
+  ])
 }
 
 export default useBoard
