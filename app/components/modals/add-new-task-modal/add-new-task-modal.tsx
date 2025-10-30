@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { useAtom, useAtomValue, useSetAtom } from "jotai"
 import type { AxiosResponse } from "axios"
 import { v4 } from "uuid"
@@ -26,28 +26,60 @@ export const AddNewTaskModal = () => {
   const columns = useAtomValue(ColumnsAtom)
   const setActiveModal = useSetAtom(activeModalAtom)
   const [selectedTask, setSelectedTask] = useAtom(selectedTaskAtom)
-  const states = useMemo(() => columns?.map(column => ({ value: column.id, label: capitalize(column.name) })), [columns]) || []
-  const existingSubtasks = useMemo(() => selectedTask?.subtasks.map(s => `${s.id}`), [selectedTask?.subtasks]) || []
-
+  
+  const states = useMemo(() => 
+    columns?.map(column => ({ value: column.id, label: capitalize(column.name) })) || [], 
+    [columns]
+  )
+  
+  const isNew = !selectedTask?.id
   const [selectedStatus, setSelectedStatus] = useState<string | undefined>(selectedTask?.status || states[0]?.value)
-  const [subtasks, setSubtasks] = useState<string[]>(existingSubtasks)
+  const [subtasks, setSubtasks] = useState<string[]>(() => 
+    selectedTask?.subtasks.map(s => s.id || v4()) || []
+  )
   const [errors, setErrors] = useState<Record<string, string>>({}) 
-  const [isNew] = useState<boolean>(!selectedTask?.id)
   const [hasChanges, setHasChanges] = useState<boolean>(isNew)
 
   const { addTask, updateTask } = useBoard()
 
-  const handleStatusChange = (value: string) => setSelectedStatus(value)
+  // Reset form state when selectedTask changes
+  useEffect(() => {
+    setSelectedStatus(selectedTask?.status || states[0]?.value)
+    setSubtasks(selectedTask?.subtasks.map(s => s.id || v4()) || [])
+    setHasChanges(isNew)
+    setErrors({})
+  }, [selectedTask?.id, states, isNew])
+
+  // Check for changes whenever relevant state updates
+  useEffect(() => {
+    if (isNew) {
+      setHasChanges(true)
+      return
+    }
+
+    if (!selectedTask || !formRef.current) {
+      setHasChanges(false)
+      return
+    }
+
+    setHasChanges(hasUpdates(selectedTask, formRef.current, selectedStatus, subtasks))
+  }, [selectedTask, selectedStatus, subtasks, isNew])
+
+  const handleStatusChange = (value: string) => {
+    console.log('[handleStatusChange] ', value)
+    setSelectedStatus(value)
+  }
 
   const handleFormChange = () => {
-    if (isNew || !selectedTask || !formRef.current) return
-
-    setHasChanges(isNew || hasUpdates(selectedTask, formRef.current))
+    // Changes will be detected by the useEffect above
   }
 
   const handleAddNewSubtask = () => {
     setSubtasks(current => [...current, v4()])
-    handleFormChange()
+  }
+
+  const handleRemoveSubtask = (subtaskId: string) => {
+    setSubtasks(current => current.filter(st => st !== subtaskId))
   }
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -139,7 +171,7 @@ export const AddNewTaskModal = () => {
               errorMessage={errors[subTask]}
               onChange={() => setErrors(current => ({...current, [subTask]: ''}))}
             />
-            <span className={baseStyles.closeIcon} onClick={() => setSubtasks(current => current.filter(st => st !== subTask))}></span>
+            <span className={baseStyles.closeIcon} onClick={() => handleRemoveSubtask(subTask)}></span>
           </div>
         ))}
 
@@ -175,18 +207,28 @@ export const AddNewTaskModal = () => {
   )
 }
 
-function hasUpdates(task: ITask, form: HTMLFormElement): boolean {
+function hasUpdates(
+  task: ITask, 
+  form: HTMLFormElement, 
+  currentStatus?: string, 
+  currentSubtasks: string[] = []
+): boolean {
   const formData = new FormData(form)
 
-  const staticFields = ['title', 'description', 'status']
-  const formObj = Object.fromEntries(formData)
-  const subtaskCount = Object.keys(formObj).filter(k => !staticFields.includes(k))
+  // Check if basic fields changed
+  if (formData.get('title') !== task.title) return true
+  if (formData.get('description') !== task.description) return true
+  if (currentStatus !== task.status) return true
 
-  return formData.get('title') !== task.title
-    || formData.get('description') !== task.description
-    || formData.get('status') !== task.status
-    || task.subtasks.length !== subtaskCount.length
-    || task.subtasks.some(st => formData.get(st.id as string) !== st.name)
+  // Check if subtask count changed
+  if (currentSubtasks.length !== task.subtasks.length) return true
+
+  // Check if any subtask content changed
+  return task.subtasks.some(st => {
+    const subtaskId = st.id as string
+    const formValue = formData.get(subtaskId)
+    return formValue !== st.name
+  })
 }
 
 export default AddNewTaskModal
