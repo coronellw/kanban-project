@@ -1,0 +1,1 @@
+var r=(e=>(e[e.None=0]="None",e[e.Sidebar=1]="Sidebar",e[e.ViewTask=2]="ViewTask",e[e.EditBoard=3]="EditBoard",e[e.AddNewTask=4]="AddNewTask",e[e.AddNewBoard=5]="AddNewBoard",e[e.ConfirmTaskDeletion=6]="ConfirmTaskDeletion",e[e.confirmBoardDeletion=7]="confirmBoardDeletion",e))(r||{});export{r as M};
