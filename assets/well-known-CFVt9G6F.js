@@ -1,1 +1,0 @@
-import{w as n}from"./with-props-BcZ6_md9.js";import"./chunk-D52XG6IA-B31Ay_w7.js";function l(){throw new Response(null,{status:404})}const r=n(function(){return null});export{l as clientLoader,r as default};

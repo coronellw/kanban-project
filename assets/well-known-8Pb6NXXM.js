@@ -1,0 +1,1 @@
+import{w as n}from"./with-props-DUHRdZCF.js";import"./chunk-D52XG6IA-CN6bPhXP.js";function l(){throw new Response(null,{status:404})}const r=n(function(){return null});export{l as clientLoader,r as default};
